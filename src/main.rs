@@ -1,4 +1,5 @@
-use std::num;
+
+use std::cmp::{Eq, PartialEq};
 
 fn main() {
     println!("Hello, world!");
@@ -21,7 +22,7 @@ fn fl_cmp(a: f64, b:f64) -> FlCompare {
     let diff = a - b;
     if diff.abs() < epsilon {
         return FlCompare::EQ;
-    } else if diff > 0 {
+    } else if diff > 0.0 {
         return FlCompare::GT;
     } else {
         return FlCompare::LT; 
@@ -30,25 +31,29 @@ fn fl_cmp(a: f64, b:f64) -> FlCompare {
 
 fn fl_eq(a: f64, b: f64) -> bool {
     match fl_cmp(a, b) {
-        EQ => true,
+        FlCompare::EQ => true,
         _ => false
     }
 }
 
+
 #[allow(dead_code)]
 trait GlPrimative {
-
-}
-
-impl GlPrimative {
-    
+    fn to_tuple(self) -> (f64, f64, f64, usize);
 }
 
 #[allow(dead_code)]
+#[derive(Clone, Copy, Debug)]
 struct GlPoint {
     x: f64,
     y: f64,
     z: f64,
+}
+
+impl PartialEq for GlPoint {
+    fn eq(&self, b: &GlPoint) -> bool {
+        fl_eq(self.x, b.x) && fl_eq(self.y, b.y) && fl_eq(self.z, b.z)
+    }
 }
 
 impl GlPoint {
@@ -62,7 +67,14 @@ impl GlPoint {
     }
 }
 
+impl GlPrimative for GlPoint {
+    fn to_tuple(self) -> (f64, f64, f64, usize) {
+        (self.x, self.y, self.z, 0)
+    } 
+}
+
 #[allow(dead_code)]
+#[derive(Clone, Copy, Debug)]
 struct GlVector {
     x: f64,
     y: f64,
@@ -80,6 +92,17 @@ impl GlVector {
     }
 }
 
+impl PartialEq for GlVector {
+    fn eq(&self, b: &GlVector) -> bool {
+        fl_eq(self.x, b.x) && fl_eq(self.y, b.y) && fl_eq(self.z, b.z)
+    }
+}
+
+impl GlPrimative for GlVector {
+    fn to_tuple(self) -> (f64, f64, f64, usize) {
+        (self.x, self.y, self.z, 1)
+    } 
+}
 
 #[cfg(test)]
 mod tests {
@@ -93,7 +116,7 @@ mod tests {
     */
     #[test]
     fn test_add() {
-        assert_eq!(1 + 2, 3);
+        assert_eq!(GlPoint::new(2.3, 42.5, 84.0).to_tuple(), (2.3, 42.5, 84.0, 0));
     }
 
 
