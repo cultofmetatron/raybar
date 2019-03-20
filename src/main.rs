@@ -1,5 +1,6 @@
 
 use std::cmp::{Eq, PartialEq};
+use std::ops;
 
 fn main() {
     println!("Hello, world!");
@@ -69,8 +70,16 @@ impl GlPoint {
 
 impl GlPrimative for GlPoint {
     fn to_tuple(self) -> (f64, f64, f64, usize) {
-        (self.x, self.y, self.z, 0)
+        (self.x, self.y, self.z, 1)
     } 
+}
+
+impl ops::Add<GlVector> for GlPoint {
+    type Output = GlPoint;
+
+    fn add(self, rhs: GlVector) -> GlPoint {
+        GlPoint::new(self.x + rhs.x, self.y + rhs.y, self.z + rhs.z)
+    }
 }
 
 #[allow(dead_code)]
@@ -100,7 +109,7 @@ impl PartialEq for GlVector {
 
 impl GlPrimative for GlVector {
     fn to_tuple(self) -> (f64, f64, f64, usize) {
-        (self.x, self.y, self.z, 1)
+        (self.x, self.y, self.z, 0)
     } 
 }
 
@@ -115,8 +124,8 @@ mod tests {
             Then p = GlPoint{4, -4, 3}
     */
     #[test]
-    fn test_add() {
-        assert_eq!(GlPoint::new(2.3, 42.5, 84.0).to_tuple(), (2.3, 42.5, 84.0, 0));
+    fn test_create_point() {
+        assert_eq!(GlPoint::new(2.3, 42.5, 84.0).to_tuple(), (2.3, 42.5, 84.0, 1));
     }
 
 
@@ -126,9 +135,15 @@ mod tests {
             Then v = GlVector(4, -4, 3)
     */
     #[test]
-    fn test_bad_add() {
-        // This assert would fire and test will fail.
-        // Please note, that private functions can be tested too!
-        assert_eq!(1 + 1 + 1, 3);
+    fn test_create_vector() {
+        assert_eq!(GlVector::new(2.3, 42.5, 84.0).to_tuple(), (2.3, 42.5, 84.0, 0));
+    }
+
+    #[test]
+    fn test_point_plus_vector() {
+        let a: GlPoint = GlPoint::new(2.3, 42.5, 84.0);
+        let b: GlVector = GlVector::new(2.3, 42.5, 84.0);
+        let new_point: GlPoint = a + b;
+        assert_eq!(new_point, GlPoint::new(4.6, 85.0, 168.0));
     }
 }
