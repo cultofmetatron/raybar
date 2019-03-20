@@ -1,5 +1,5 @@
 
-use std::cmp::{Eq, PartialEq};
+use std::cmp::{PartialEq};
 use std::ops;
 
 fn main() {
@@ -113,6 +113,13 @@ impl GlPrimative for GlVector {
     } 
 }
 
+impl ops::Add<GlVector> for GlVector {
+    type Output = GlVector;
+    fn add(self, rhs: GlVector) -> GlVector {
+        GlVector::new(self.x + rhs.x, self.y + rhs.y, self.z + rhs.z)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     // Note this useful idiom: importing names from outer (for mod tests) scope.
@@ -145,5 +152,13 @@ mod tests {
         let b: GlVector = GlVector::new(2.3, 42.5, 84.0);
         let new_point: GlPoint = a + b;
         assert_eq!(new_point, GlPoint::new(4.6, 85.0, 168.0));
+    }
+
+    #[test]
+    fn test_vector_plus_vector() {
+        let a: GlVector = GlVector::new(2.3, 42.5, 84.0);
+        let b: GlVector = GlVector::new(2.3, 42.5, 84.0);
+        let new_vector: GlVector = a + b;
+        assert_eq!(new_vector, GlVector::new(4.6, 85.0, 168.0));
     }
 }
