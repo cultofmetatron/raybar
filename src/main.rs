@@ -135,8 +135,16 @@ impl GlVector {
         )
     }
     #[allow(dead_code)]
-    fn dot(self, v2: GlVector) -> f64{
+    fn dot(self, v2: GlVector) -> f64 {
         self.x * v2.x + self.y * v2.y + self.z * v2.z
+    }
+    #[allow(dead_code)]
+    fn cross(self, v2: GlVector) -> GlVector {
+        GlVector::new(
+            self.y * v2.z - self.z * v2.y,
+            self.z * v2.x - self.x * v2.z,
+            self.x * v2.y - self.y * v2.x
+        )
     }
 }
 
@@ -290,5 +298,13 @@ mod tests {
         let a: GlVector = GlVector::new(1.0, 2.0, 3.0);
         let b: GlVector = GlVector::new(2.0, 3.0, 4.0);
         assert_eq!(a.dot(b), 20.0);
+    }
+
+    #[test]
+    fn test_vector_cross_product() {
+        let a: GlVector = GlVector::new(1.0, 2.0, 3.0);
+        let b: GlVector = GlVector::new(2.0, 3.0, 4.0);
+        assert_eq!(a.cross(b), GlVector::new(-1.0, 2.0, -1.0));
+        assert_eq!(b.cross(a), GlVector::new(1.0, -2.0, 1.0));
     }
 }
