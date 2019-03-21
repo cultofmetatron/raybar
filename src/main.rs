@@ -121,6 +121,9 @@ impl GlVector {
         let zero_vector = GlVector::new(0.0, 0.0, 0.0);
         zero_vector - self
     }
+    fn magnitude(self) -> f64 {
+        f64::sqrt(self.x.powi(2) + self.y.powi(2) + self.z.powi(2))
+    }
 }
 
 impl PartialEq for GlVector {
@@ -249,8 +252,15 @@ mod tests {
     fn test_vector_mult_scalar() {
         assert_eq!(GlVector::new(2.0, 4.0, 6.0) * 2.0, GlVector::new(4.0, 8.0, 12.0));
     }
-        #[test]
+    #[test]
     fn test_vector_div_scalar() {
         assert_eq!(GlVector::new(2.0, 4.0, 6.0) / 2.0, GlVector::new(1.0, 2.0, 3.0));
+    }
+    #[test]
+    fn test_vector_magnitude() {
+        assert_eq!(GlVector::new(1.0, 0.0, 0.0).magnitude(), 1.0);
+        assert_eq!(GlVector::new(0.0, 1.0, 0.0).magnitude(), 1.0);
+        assert_eq!(GlVector::new(0.0, 0.0, 1.0).magnitude(), 1.0);
+        assert_eq!(GlVector::new(0.0, 1.0, 1.0).magnitude(), f64::sqrt(2.0));
     }
 }
