@@ -134,6 +134,10 @@ impl GlVector {
             self.z / mag
         )
     }
+    #[allow(dead_code)]
+    fn dot(self, v2: GlVector) -> f64{
+        self.x * v2.x + self.y * v2.y + self.z * v2.z
+    }
 }
 
 impl PartialEq for GlVector {
@@ -279,5 +283,12 @@ mod tests {
         assert_eq!(GlVector::new(4.0, 0.0, 0.0).normalize(), GlVector::new(1.0, 0.0, 0.0));
         assert_eq!(GlVector::new(0.0, 6.0, 0.0).normalize(), GlVector::new(0.0, 1.0, 0.0));
         assert_eq!(GlVector::new(1.0, 2.0, 3.0).normalize(), GlVector::new(0.26726, 0.53452, 0.80178));
+    }
+
+    #[test]
+    fn test_vector_dot_product() {
+        let a: GlVector = GlVector::new(1.0, 2.0, 3.0);
+        let b: GlVector = GlVector::new(2.0, 3.0, 4.0);
+        assert_eq!(a.dot(b), 20.0);
     }
 }
