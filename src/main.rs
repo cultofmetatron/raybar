@@ -121,8 +121,18 @@ impl GlVector {
         let zero_vector = GlVector::new(0.0, 0.0, 0.0);
         zero_vector - self
     }
+    #[allow(dead_code)]
     fn magnitude(self) -> f64 {
         f64::sqrt(self.x.powi(2) + self.y.powi(2) + self.z.powi(2))
+    }
+    #[allow(dead_code)]
+    fn normalize(self) -> GlVector {
+        let mag: f64 = self.magnitude();
+        GlVector::new(
+            self.x / mag,
+            self.y / mag,
+            self.z / mag
+        )
     }
 }
 
@@ -262,5 +272,12 @@ mod tests {
         assert_eq!(GlVector::new(0.0, 1.0, 0.0).magnitude(), 1.0);
         assert_eq!(GlVector::new(0.0, 0.0, 1.0).magnitude(), 1.0);
         assert_eq!(GlVector::new(0.0, 1.0, 1.0).magnitude(), f64::sqrt(2.0));
+    }
+
+    #[test]
+    fn test_vector_normalize() {
+        assert_eq!(GlVector::new(4.0, 0.0, 0.0).normalize(), GlVector::new(1.0, 0.0, 0.0));
+        assert_eq!(GlVector::new(0.0, 6.0, 0.0).normalize(), GlVector::new(0.0, 1.0, 0.0));
+        assert_eq!(GlVector::new(1.0, 2.0, 3.0).normalize(), GlVector::new(0.26726, 0.53452, 0.80178));
     }
 }
