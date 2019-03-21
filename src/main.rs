@@ -137,6 +137,14 @@ impl ops::Add<GlVector> for GlVector {
     }
 }
 
+impl ops::Sub<GlVector> for GlVector {
+    type Output = GlVector;
+    
+    fn sub(self, rhs: GlVector) -> GlVector {
+        GlVector::new(self.x - rhs.x, self.y - rhs.y, self.z - rhs.z)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     // Note this useful idiom: importing names from outer (for mod tests) scope.
@@ -192,5 +200,12 @@ mod tests {
         let b: GlVector = GlVector::new(2.3, 42.5, 0.0);
         let new_point = a - b;
         assert_eq!(new_point, GlPoint::new(0.0, 0.0, 84.0));
+    }
+    #[test]
+    fn test_vector_minus_vector() {
+        let a: GlVector = GlVector::new(2.3, 42.5, 84.0);
+        let b: GlVector = GlVector::new(2.3, 42.5, 84.0);
+        let new_vector: GlVector = a - b;
+        assert_eq!(new_vector, GlVector::new(0.0, 0.0, 0.0));
     }
 }
