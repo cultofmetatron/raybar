@@ -116,6 +116,11 @@ impl GlVector {
             z
         }
     }
+    #[allow(dead_code)]
+    fn negate(self) -> GlVector {
+        let zero_vector = GlVector::new(0.0, 0.0, 0.0);
+        zero_vector - self
+    }
 }
 
 impl PartialEq for GlVector {
@@ -208,4 +213,9 @@ mod tests {
         let new_vector: GlVector = a - b;
         assert_eq!(new_vector, GlVector::new(0.0, 0.0, 0.0));
     }
+
+    #[test]
+    fn test_vector_negation() {
+        assert_eq!(GlVector::new(4.0, -2.0, -8.0).negate(), GlVector::new(-4.0, 2.0, 8.0));
+    }    
 }
