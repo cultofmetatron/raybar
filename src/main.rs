@@ -150,6 +150,28 @@ impl ops::Sub<GlVector> for GlVector {
     }
 }
 
+impl ops::Neg for GlVector {
+    type Output = GlVector;
+    fn neg(self) -> GlVector {
+        self.negate()
+    }
+}
+
+impl ops::Mul<f64> for GlVector {
+    type Output = GlVector;
+    fn mul(self, rhs: f64) -> GlVector {
+        GlVector::new(self.x * rhs, self.y * rhs, self.z * rhs)
+    }
+}
+
+impl ops::Div<f64> for GlVector {
+    type Output = GlVector;
+    fn div(self, rhs: f64) -> GlVector {
+        GlVector::new(self.x / rhs, self.y / rhs, self.z / rhs)
+    }
+}
+
+
 #[cfg(test)]
 mod tests {
     // Note this useful idiom: importing names from outer (for mod tests) scope.
@@ -217,5 +239,18 @@ mod tests {
     #[test]
     fn test_vector_negation() {
         assert_eq!(GlVector::new(4.0, -2.0, -8.0).negate(), GlVector::new(-4.0, 2.0, 8.0));
-    }    
+    } 
+    #[test]
+    fn test_vector_unary_negation() {
+        assert_eq!(-GlVector::new(4.0, -2.0, -8.0), GlVector::new(-4.0, 2.0, 8.0));
+    }
+
+    #[test]
+    fn test_vector_mult_scalar() {
+        assert_eq!(GlVector::new(2.0, 4.0, 6.0) * 2.0, GlVector::new(4.0, 8.0, 12.0));
+    }
+        #[test]
+    fn test_vector_div_scalar() {
+        assert_eq!(GlVector::new(2.0, 4.0, 6.0) / 2.0, GlVector::new(1.0, 2.0, 3.0));
+    }
 }
