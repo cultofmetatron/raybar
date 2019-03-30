@@ -5,3 +5,4 @@ authors = ["Peter de Croos <cultofmetatron@aumlogic.com>"]
 edition = "2018"
 
 [dependencies]
+ppm = "0.1.0"

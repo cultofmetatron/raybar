@@ -1,47 +1,17 @@
 
+
 use std::cmp::{PartialEq};
 use std::ops;
+
+//use crate::glprimatives::GlPrimative;
+//use raybar::*
+mod raybar;
+use raybar::glprimatives::*;
 
 fn main() {
     println!("Hello, world!");
 }
 
-/*
-    GlPrimative is a shared set of traints between the point, vector and matrix operations 
-    allowing all 3 to interoperate with each other
-*/
-
-// for comparing floating points
-enum FlCompare {
-    GT,
-    LT,
-    EQ
-}
-
-fn fl_cmp(a: f64, b:f64) -> FlCompare {
-    let epsilon: f64 = 0.0001;
-    let diff = a - b;
-    if diff.abs() < epsilon {
-        return FlCompare::EQ;
-    } else if diff > 0.0 {
-        return FlCompare::GT;
-    } else {
-        return FlCompare::LT; 
-    }
-}
-
-fn fl_eq(a: f64, b: f64) -> bool {
-    match fl_cmp(a, b) {
-        FlCompare::EQ => true,
-        _ => false
-    }
-}
-
-
-#[allow(dead_code)]
-trait GlPrimative {
-    fn to_tuple(self) -> (f64, f64, f64, usize);
-}
 
 #[allow(dead_code)]
 #[derive(Clone, Copy, Debug)]
