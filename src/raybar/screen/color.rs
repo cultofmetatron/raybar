@@ -2,9 +2,11 @@
 /*
   this file contains all the stuff related to the canvas
 */
+extern crate image;
 use super::super::util::{fl_eq};
 use std::cmp::{PartialEq};
 use std::ops;
+use image::{Rgb};
 
 /*
 Color is a core primative 
@@ -32,12 +34,34 @@ impl Color {
   pub fn black() -> Color {
     Color::new(0.0, 0.0, 0.0)
   }
+  #[allow(dead_code)]
+  pub fn red() -> Color {
+    Color::new(1.0, 0.0, 0.0)
+  }
+  #[allow(dead_code)]
+  pub fn green() -> Color {
+    Color::new(0.0, 1.0, 0.0)
+  }
+  #[allow(dead_code)]
+  pub fn red() -> Color {
+    Color::new(0.0, 0.0, 1.0)
+  }
+  #[allow(dead_code)]
+  pub fn to_pixel(self) -> Rgb<u8> {
+    image::Rgb([
+      (self.red * 256.0).floor() as u8,
+      (self.green * 256.0).floor() as u8,
+      (self.blue *256.0).floor() as u8
+    ])
+  }
 }
 
 impl PartialEq for Color {
   fn eq(&self, b: &Color) -> bool {
     fl_eq(self.red, b.red) && fl_eq(self.green, b.green) && fl_eq(self.blue, b.blue)
   }
+
+  
 }
 
 impl ops::Add<Color> for Color {
