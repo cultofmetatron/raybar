@@ -10,7 +10,8 @@ use std::ops;
 Color is a core primative 
 
 */
-#[allow(dead_code)]
+
+#[derive(Clone, Copy, Debug)]
 pub struct Color {
   red: f64,
   green: f64,
@@ -47,6 +48,18 @@ impl ops::Add<Color> for Color {
   }
 }
 
+impl ops::Sub<Color> for Color {
+  type Output = Color;
+
+  fn sub(self, rhs: Color) -> Color {
+    Color::new(
+      self.red - rhs.red,
+      self.green - rhs.green,
+      self.blue - rhs.blue
+    )
+  }
+}
+
 
 #[cfg(test)]
 mod tests {
@@ -65,5 +78,11 @@ mod tests {
       let color1: Color = Color::new(-0.5, 0.4, 1.7);
       let color2: Color = Color::new(-0.5, 0.4, 1.7);
       assert_eq!(color1 == color2, true);
+    }
+    #[test]
+    fn test_add_two_colors() {
+      let color1: Color = Color::new(-0.5, 0.4, 1.7);
+      let color2: Color = Color::new(-0.5, 0.4, 1.7);
+      assert_eq!(color1 + color2, Color::new(-1.0, 0.8, 3.4));
     }
 }
