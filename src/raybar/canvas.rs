@@ -83,6 +83,17 @@ impl ops::Mul<isize> for Color {
   }
 }
 
+impl ops::Mul<Color> for Color {
+  type Output = Color;
+  fn mul(self, rhs: Color) -> Color {
+    Color::new(
+      self.red * rhs.red,
+      self.green * rhs.green,
+      self.blue * rhs.blue
+    )
+  }
+}
+
 
 
 #[cfg(test)]
@@ -121,5 +132,11 @@ mod tests {
       let color: Color = Color::new(-0.5, 0.4, 1.7);
       assert_eq!(color * 2.0, Color::new(-1.0, 0.8, 3.4));
       assert_eq!(color * 2, Color::new(-1.0, 0.8, 3.4));
+    }
+    #[test]
+    fn test_color_mutiplied_by_color() {
+      let color1 = Color::new(1.0, 0.2, 0.4);
+      let color2 = Color::new(0.9, 1.0, 0.1);
+      assert_eq!(color1 * color2, Color::new(0.9, 0.2, 0.04))
     }
 }
