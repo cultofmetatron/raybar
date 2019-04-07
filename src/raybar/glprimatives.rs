@@ -193,3 +193,115 @@ impl ops::Div<f64> for GlVector {
         GlVector::new(self.x / rhs, self.y / rhs, self.z / rhs)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    // Note this useful idiom: importing names from outer (for mod tests) scope.
+    use super::*;
+
+    /* Scenario 
+        Scenario: GlPoint() creates point
+            Given p ← GlPoint::new(4, -4, 3)
+            Then p = GlPoint{4, -4, 3}
+    */
+    #[test]
+    fn test_create_point() {
+        assert_eq!(GlPoint::new(2.3, 42.5, 84.0).to_tuple(), (2.3, 42.5, 84.0, 1));
+    }
+
+
+    /* Scenario 
+        Scenario: GlVector() creates tuples with w=0
+            Given v ← GlVector(4, -4, 3)
+            Then v = GlVector(4, -4, 3)
+    */
+    #[test]
+    fn test_create_vector() {
+        assert_eq!(GlVector::new(2.3, 42.5, 84.0).to_tuple(), (2.3, 42.5, 84.0, 0));
+    }
+
+    #[test]
+    fn test_point_plus_vector() {
+        let a: GlPoint = GlPoint::new(2.3, 42.5, 84.0);
+        let b: GlVector = GlVector::new(2.3, 42.5, 84.0);
+        let new_point: GlPoint = a + b;
+        assert_eq!(new_point, GlPoint::new(4.6, 85.0, 168.0));
+    }
+
+    #[test]
+    fn test_vector_plus_vector() {
+        let a: GlVector = GlVector::new(2.3, 42.5, 84.0);
+        let b: GlVector = GlVector::new(2.3, -42.5, 84.0);
+        let new_vector: GlVector = a + b;
+        assert_eq!(new_vector, GlVector::new(4.6, 0.0, 168.0));
+    }
+
+    #[test]
+    fn test_point_minus_point() {
+        let a: GlPoint = GlPoint::new(2.3, 42.5, 84.0);
+        let b: GlPoint = GlPoint::new(2.3, 42.5, 0.0);
+        let new_vector = a - b;
+        assert_eq!(new_vector, GlVector::new(0.0, 0.0, 84.0));
+    }
+    #[test]
+    fn test_point_minus_vector() {
+        let a: GlPoint = GlPoint::new(2.3, 42.5, 84.0);
+        let b: GlVector = GlVector::new(2.3, 42.5, 0.0);
+        let new_point = a - b;
+        assert_eq!(new_point, GlPoint::new(0.0, 0.0, 84.0));
+    }
+    #[test]
+    fn test_vector_minus_vector() {
+        let a: GlVector = GlVector::new(2.3, 42.5, 84.0);
+        let b: GlVector = GlVector::new(2.3, 42.5, 84.0);
+        let new_vector: GlVector = a - b;
+        assert_eq!(new_vector, GlVector::new(0.0, 0.0, 0.0));
+    }
+
+    #[test]
+    fn test_vector_negation() {
+        assert_eq!(GlVector::new(4.0, -2.0, -8.0).negate(), GlVector::new(-4.0, 2.0, 8.0));
+    } 
+    #[test]
+    fn test_vector_unary_negation() {
+        assert_eq!(-GlVector::new(4.0, -2.0, -8.0), GlVector::new(-4.0, 2.0, 8.0));
+    }
+
+    #[test]
+    fn test_vector_mult_scalar() {
+        assert_eq!(GlVector::new(2.0, 4.0, 6.0) * 2.0, GlVector::new(4.0, 8.0, 12.0));
+    }
+    #[test]
+    fn test_vector_div_scalar() {
+        assert_eq!(GlVector::new(2.0, 4.0, 6.0) / 2.0, GlVector::new(1.0, 2.0, 3.0));
+    }
+    #[test]
+    fn test_vector_magnitude() {
+        assert_eq!(GlVector::new(1.0, 0.0, 0.0).magnitude(), 1.0);
+        assert_eq!(GlVector::new(0.0, 1.0, 0.0).magnitude(), 1.0);
+        assert_eq!(GlVector::new(0.0, 0.0, 1.0).magnitude(), 1.0);
+        assert_eq!(GlVector::new(0.0, 1.0, 1.0).magnitude(), f64::sqrt(2.0));
+    }
+
+    #[test]
+    fn test_vector_normalize() {
+        assert_eq!(GlVector::new(4.0, 0.0, 0.0).normalize(), GlVector::new(1.0, 0.0, 0.0));
+        assert_eq!(GlVector::new(0.0, 6.0, 0.0).normalize(), GlVector::new(0.0, 1.0, 0.0));
+        assert_eq!(GlVector::new(1.0, 2.0, 3.0).normalize(), GlVector::new(0.26726, 0.53452, 0.80178));
+    }
+
+    #[test]
+    fn test_vector_dot_product() {
+        let a: GlVector = GlVector::new(1.0, 2.0, 3.0);
+        let b: GlVector = GlVector::new(2.0, 3.0, 4.0);
+        assert_eq!(a.dot(b), 20.0);
+    }
+
+    #[test]
+    fn test_vector_cross_product() {
+        let a: GlVector = GlVector::new(1.0, 2.0, 3.0);
+        let b: GlVector = GlVector::new(2.0, 3.0, 4.0);
+        assert_eq!(a.cross(b), GlVector::new(-1.0, 2.0, -1.0));
+        assert_eq!(b.cross(a), GlVector::new(1.0, -2.0, 1.0));
+    }
+}
