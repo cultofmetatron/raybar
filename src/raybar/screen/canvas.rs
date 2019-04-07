@@ -14,32 +14,36 @@ vector vector pixel(color)
 */
 #[allow(dead_code)]
 pub struct Canvas {
-  board: Box<Vec<Box<Vec<Color>>>>
+  board: Vec<Vec<Color>>
 }
 
 impl Canvas {
   #[allow(dead_code)]
   pub fn new(length: usize, width: usize) -> Canvas {
-    let board: Vec<Box<Vec<Color>>> = (0..length)
+    let board: Vec<Vec<Color>> = (0..length)
       .into_iter()
       .map(|_x| Canvas::init_row(width))
       .collect();
     Canvas {
-      board: Box::new(board)
+      board: board
     }
   }
-  fn init_row(size: usize) -> Box<Vec<Color>> {
+  fn init_row(size: usize) -> Vec<Color> {
     let row: Vec<Color> = (0..size)
       .into_iter()
       .map(|_x| Color::black())
       .collect();
-    Box::new(row)
+    row
   }
   #[allow(dead_code)]
-  pub fn set_pixel(mut self, length: usize, width: usize, color: Color) -> Canvas {
+  pub fn set_pixel(mut self, col: usize, row: usize, color: Color) -> Canvas {
     //let mut board = self.board;
-    self.board[length][width] = color;
+    self.board[col][row] = color;
     self
+  }
+  #[allow(dead_code)]
+  pub fn get_pixel(self, col: usize, row: usize) -> Color {
+    self.board[col][row].clone()
   }
 }
 
