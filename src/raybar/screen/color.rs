@@ -2,7 +2,7 @@
 /*
   this file contains all the stuff related to the canvas
 */
-use super::util::{fl_eq};
+use super::super::util::{fl_eq};
 use std::cmp::{PartialEq};
 use std::ops;
 
@@ -27,6 +27,10 @@ impl Color {
       green,
       blue,
     }
+  }
+  #[allow(dead_code)]
+  pub fn black() -> Color {
+    Color::new(0.0, 0.0, 0.0)
   }
 }
 
