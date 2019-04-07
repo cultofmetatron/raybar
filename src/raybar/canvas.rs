@@ -60,6 +60,30 @@ impl ops::Sub<Color> for Color {
   }
 }
 
+impl ops::Mul<f64> for Color {
+  type Output = Color;
+  fn mul(self, rhs: f64) -> Color {
+    Color::new(
+      self.red * rhs,
+      self.green * rhs,
+      self.blue * rhs
+    )
+  }
+}
+
+impl ops::Mul<isize> for Color {
+  type Output = Color;
+  fn mul(self, rhs: isize) -> Color {
+    let operant: f64 = rhs as f64;
+    Color::new(
+      self.red * operant,
+      self.green * operant,
+      self.blue * operant
+    )
+  }
+}
+
+
 
 #[cfg(test)]
 mod tests {
@@ -90,5 +114,12 @@ mod tests {
       let color1: Color = Color::new(-0.5, 0.4, 1.7);
       let color2: Color = Color::new(0.0, 0.4, 1.7);
       assert_eq!(color1 - color2, Color::new(-0.5, 0.0, 0.0));
+    }
+
+    #[test]
+    fn test_color_mutiplied_by_scalar() {
+      let color: Color = Color::new(-0.5, 0.4, 1.7);
+      assert_eq!(color * 2.0, Color::new(-1.0, 0.8, 3.4));
+      assert_eq!(color * 2, Color::new(-1.0, 0.8, 3.4));
     }
 }
