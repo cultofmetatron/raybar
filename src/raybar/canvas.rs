@@ -85,4 +85,10 @@ mod tests {
       let color2: Color = Color::new(-0.5, 0.4, 1.7);
       assert_eq!(color1 + color2, Color::new(-1.0, 0.8, 3.4));
     }
+    #[test]
+    fn test_subtract_two_colors() {
+      let color1: Color = Color::new(-0.5, 0.4, 1.7);
+      let color2: Color = Color::new(0.0, 0.4, 1.7);
+      assert_eq!(color1 - color2, Color::new(-0.5, 0.0, 0.0));
+    }
 }
