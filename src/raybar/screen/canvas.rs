@@ -4,7 +4,7 @@ use super::color::Color;
 
 use std::vec::Vec;
 
-use image::{Pixel, Rgb, ImageBuffer};
+use image::{Rgb, ImageBuffer};
 /*
 
 a Canvas is a core primative for hosling the representation of a screen
@@ -69,6 +69,7 @@ impl Canvas {
     }
     buffer
   }
+  #[allow(dead_code)]
   pub fn save(&self, filename: String) {
     let buffer = self.export_buffer();
     buffer.save(filename).unwrap();

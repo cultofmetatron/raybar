@@ -43,9 +43,10 @@ impl Color {
     Color::new(0.0, 1.0, 0.0)
   }
   #[allow(dead_code)]
-  pub fn red() -> Color {
+  pub fn blue() -> Color {
     Color::new(0.0, 0.0, 1.0)
   }
+
   #[allow(dead_code)]
   pub fn to_pixel(self) -> Rgb<u8> {
     image::Rgb([
@@ -66,7 +67,7 @@ impl PartialEq for Color {
 
 impl ops::Add<Color> for Color {
   type Output = Color;
-
+  #[allow(dead_code)]
   fn add(self, rhs: Color) -> Color {
     Color::new(
       self.red + rhs.red,
@@ -78,7 +79,7 @@ impl ops::Add<Color> for Color {
 
 impl ops::Sub<Color> for Color {
   type Output = Color;
-
+  #[allow(dead_code)]
   fn sub(self, rhs: Color) -> Color {
     Color::new(
       self.red - rhs.red,
