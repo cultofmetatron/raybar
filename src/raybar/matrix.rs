@@ -31,6 +31,18 @@ impl<T: PartialEq + Ord> GlMatrix<T> {
       panic!("all rows must be the same size!");
     }
   }
+  #[allow(dead_code)]
+  pub fn get_row_size(&self) -> usize {
+    self.content.len()
+  }
+  #[allow(dead_code)]
+  pub fn get_col_size(&self) -> usize {
+    self.content[0].len()
+  }
+  #[allow(dead_code)]
+  pub fn get_dimensions(&self) -> (usize, usize) {
+    (self.get_row_size(), self.get_col_size())
+  }
 
   #[allow(dead_code)]
   fn vec_sizing(list: &Vec<Vec<T>>) -> bool {
