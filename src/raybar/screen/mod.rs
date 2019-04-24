@@ -1,3 +1,2 @@
-
-mod color;
 mod canvas;
+mod color;
