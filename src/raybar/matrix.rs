@@ -10,6 +10,8 @@
 */
 use super::util::fl_eq;
 use std::cmp::{Ord, PartialEq};
+//std::clone::Clone;
+//std::copy::{Copy};
 use std::ops;
 
 #[allow(dead_code)]
@@ -18,7 +20,7 @@ pub struct GlMatrix<T: PartialEq + Ord> {
     content: Vec<Vec<T>>,
 }
 
-impl<T: PartialEq + Ord> GlMatrix<T> {
+impl<T: PartialEq + Ord + Clone> GlMatrix<T> {
     // new
     #[allow(dead_code)]
     pub fn new(content: Vec<Vec<T>>) -> GlMatrix<T> {
@@ -28,6 +30,10 @@ impl<T: PartialEq + Ord> GlMatrix<T> {
         } else {
             panic!("all rows must be the same size!");
         }
+    }
+    #[allow(dead_code)]
+    pub fn get(&self, n: usize, m: usize) -> T {
+      self.content[n][m].clone()
     }
     #[allow(dead_code)]
     pub fn get_row_size(&self) -> usize {
@@ -91,6 +97,8 @@ mod tests {
       ]);
       assert_eq!(matrix.get_dimensions(), (3, 3));
       assert!(matrix.is_square());
+
+      assert_eq!(matrix.get(2, 2), 3);
     }
 
 }
