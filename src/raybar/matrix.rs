@@ -54,6 +54,15 @@ impl<T: PartialEq + Ord + Mul<Output = T> + Add<Output = T> + Sub<Output = T> + 
         GlMatrix::new(rows)
     }
     #[allow(dead_code)]
+    pub fn transpose(&self) -> GlMatrix<T> {
+        let mut rows = vec![];
+        for j in 0..self.get_col_size() {
+            let column = self.get_column(j);
+            rows.push(column);
+        }
+        GlMatrix::new(rows)
+    }
+    #[allow(dead_code)]
     pub fn get(&self, n: usize, m: usize) -> &T {
         &self.content[n][m]
     }
@@ -230,6 +239,26 @@ mod tests {
         ]);
         
         assert_eq!(matrix_b.dot(&GlMatrix::identity(3)), matrix_b);
+    }
+    #[test]
+    fn test_transpose() {
+        let matrix = GlMatrix::new(vec![
+            vec![0, 9, 3, 0],
+            vec![9, 8, 0, 8],
+            vec![1, 8, 5, 3],
+            vec![0, 0, 5, 8]
+        ]);
+        let transpose_matrix = GlMatrix::new(vec![
+            vec![0, 9, 1, 0],
+            vec![9, 8, 8, 0],
+            vec![3, 0, 5, 5],
+            vec![0, 8, 3, 8]
+        ]);
+
+        assert_eq!(matrix.transpose(), transpose_matrix);
+
+        let transposed_identity: GlMatrix<isize> = GlMatrix::identity(5).transpose();
+        assert_eq!(transposed_identity, GlMatrix::identity(5));
 
     }
 
