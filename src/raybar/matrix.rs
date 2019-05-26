@@ -60,11 +60,11 @@ impl<T: PartialEq + Ord + Mul<Output = T> + Add<Output = T> + Sub<Output = T> + 
         m == n
     }
     #[allow(dead_code)]
-    pub fn dot(&self, b: GlMatrix<T>) -> GlMatrix<T> {
+    pub fn dot(&self, b: &GlMatrix<T>) -> GlMatrix<T> {
         let mut contents: Vec<Vec<T>> = vec![];
         //for each row, compute all the values
         let row_size = self.get_row_size();
-        let col_size = self.get_col_size();
+        let col_size = b.get_col_size();
         // row size must equal col size or we should panic as it is an invalid operation
         if row_size != col_size {
             panic!("invalid matrix operation: invalid dimensions for dot product");
@@ -176,6 +176,28 @@ mod tests {
         assert!(matrix.is_square());
 
         assert_eq!(*matrix.get(2, 2), 3)
+    }
+    #[test]
+    fn test_dot_product() {
+        let matrix_a = GlMatrix::new(vec![
+            vec![1, 2, 3],
+            vec![4, 5, 6],
+        ]);
+
+        let matrix_b = GlMatrix::new(vec![
+            vec![7,   8],
+            vec![9,  10],
+            vec![11, 12],
+        ]);
+
+        let matrix_c = matrix_a.dot(&matrix_b);
+        print!("{:?}", matrix_c);
+        assert_eq!(matrix_c, GlMatrix::new(vec![
+            vec![58,   64],
+            vec![139,   154],
+        ]))
+
+
     }
 
 }
