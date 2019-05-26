@@ -12,7 +12,7 @@ use super::util::fl_eq;
 use std::cmp::{Ord, PartialEq};
 //std::clone::Clone;
 //std::copy::{Copy};
-use std::ops;
+use std::ops::{Mul, Add, Sub};
 
 #[allow(dead_code)]
 #[derive(Clone, Debug, PartialEq)]
@@ -20,7 +20,7 @@ pub struct GlMatrix<T: PartialEq + Ord> {
     content: Vec<Vec<T>>,
 }
 
-impl<T: PartialEq + Ord + Clone> GlMatrix<T> {
+impl<T: PartialEq + Ord + Mul + Add + Sub + Clone> GlMatrix<T> {
     // new
     #[allow(dead_code)]
     pub fn new(content: Vec<Vec<T>>) -> GlMatrix<T> {
@@ -32,8 +32,8 @@ impl<T: PartialEq + Ord + Clone> GlMatrix<T> {
         }
     }
     #[allow(dead_code)]
-    pub fn get(&self, n: usize, m: usize) -> T {
-      self.content[n][m].clone()
+    pub fn get(&self, n: usize, m: usize) -> &T {
+      &self.content[n][m]
     }
     #[allow(dead_code)]
     pub fn get_row_size(&self) -> usize {
@@ -51,6 +51,43 @@ impl<T: PartialEq + Ord + Clone> GlMatrix<T> {
     pub fn is_square(&self) -> bool {
       let (m, n) = self.get_dimensions();
       m == n
+    }
+    //pub fn dot(&self, b: GlMatrix<T>) -> {
+        
+   // }
+    #[allow(dead_code)]
+    pub fn dot_list<C: PartialEq + Ord + Mul<Output = C> + Add<Output = C> + Sub<Output = C> + Clone>(row: Vec<C>, col: Vec<C>) -> Option<C> {
+        if row.len() == 0 {
+            return None;  //hack for dealing with null generics
+        }
+        if row.len() == col.len() {
+            let mut i = 0;
+            let mut acc = row[i].clone() * col[i].clone();
+            loop {
+                i = i + 1;
+                if i == row.len() {
+                    break;
+                } else {
+                    acc = acc + (row[i].clone() * col[i].clone());
+                }
+            };
+            return Option::Some(acc);
+        } else {
+            panic!("Invalid Matrix ");
+        }
+    }
+    #[allow(dead_code)]
+    pub fn get_row(&self, index: usize) -> Vec<T> {
+        self.content[index].clone()
+    }
+    #[allow(dead_code)]
+    pub fn get_column(&self, index: usize) -> Vec<T> {
+        // for each row, get the ith value and push it into the vector
+        let mut column: Vec<T> = vec![];
+        for row in self.content.clone().into_iter() {
+            column.push(row[index].clone());
+        }
+        column
     }
     #[allow(dead_code)]
     fn vec_sizing(list: &Vec<Vec<T>>) -> bool {
@@ -98,7 +135,7 @@ mod tests {
       assert_eq!(matrix.get_dimensions(), (3, 3));
       assert!(matrix.is_square());
 
-      assert_eq!(matrix.get(2, 2), 3);
+      assert_eq!(*matrix.get(2, 2), 3);
     }
 
 }
