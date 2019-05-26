@@ -25,7 +25,9 @@ pub struct GlMatrix<T: PartialEq + Ord> {
     content: Vec<Vec<T>>,
 }
 
-impl<T: PartialEq + Ord + Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Clone + Zero> GlMatrix<T> {
+impl<T: PartialEq + Ord + Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Clone + Zero>
+    GlMatrix<T>
+{
     // new
     #[allow(dead_code)]
     pub fn new(content: Vec<Vec<T>>) -> GlMatrix<T> {
@@ -57,7 +59,7 @@ impl<T: PartialEq + Ord + Mul<Output = T> + Add<Output = T> + Sub<Output = T> + 
         let (m, n) = self.get_dimensions();
         m == n
     }
-    #[allow(dead_code)] 
+    #[allow(dead_code)]
     pub fn dot(&self, b: GlMatrix<T>) -> GlMatrix<T> {
         let mut contents: Vec<Vec<T>> = vec![];
         //for each row, compute all the values
@@ -81,7 +83,8 @@ impl<T: PartialEq + Ord + Mul<Output = T> + Add<Output = T> + Sub<Output = T> + 
                             break;
                         } else {
                             let column = b.get_column(j);
-                            let dot_product_i_j = GlMatrix::dot_list(&row, &column).unwrap_or(Zero::zero());
+                            let dot_product_i_j =
+                                GlMatrix::dot_list(&row, &column).unwrap_or(Zero::zero());
                             new_row.push(dot_product_i_j);
                             j = j + 1;
                         }
@@ -93,12 +96,9 @@ impl<T: PartialEq + Ord + Mul<Output = T> + Add<Output = T> + Sub<Output = T> + 
             return GlMatrix::new(contents);
         }
     }
-    
+
     #[allow(dead_code)]
-    pub fn dot_list(
-        row: &Vec<T>,
-        col: &Vec<T>,
-    ) -> Option<T> {
+    pub fn dot_list(row: &Vec<T>, col: &Vec<T>) -> Option<T> {
         if row.len() == 0 {
             return None; //hack for dealing with null generics
         }
