@@ -17,7 +17,7 @@ use std::ops::{Add, Mul, Sub};
 use std::convert::From;
 extern crate num_traits;
 
-use num_traits::Zero;
+use num_traits::{Zero, One};
 
 #[allow(dead_code)]
 #[derive(Clone, Debug, PartialEq)]
@@ -25,10 +25,9 @@ pub struct GlMatrix<T: PartialEq + Ord> {
     content: Vec<Vec<T>>,
 }
 
-impl<T: PartialEq + Ord + Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Clone + Zero>
+impl<T: PartialEq + Ord + Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Clone + Zero + One>
     GlMatrix<T>
 {
-    // new
     #[allow(dead_code)]
     pub fn new(content: Vec<Vec<T>>) -> GlMatrix<T> {
         // for each sup vector, the length must be consitent
@@ -37,6 +36,22 @@ impl<T: PartialEq + Ord + Mul<Output = T> + Add<Output = T> + Sub<Output = T> + 
         } else {
             panic!("all rows must be the same size!");
         }
+    }
+    #[allow(dead_code)]
+    pub fn identity(size: usize) -> GlMatrix<T> {
+        let mut rows = vec![];
+        for i in 0..size {
+            let mut row: Vec<T> = vec![];
+            for j in 0..size {
+                if j == i {
+                    row.push(One::one());
+                } else {
+                    row.push(Zero::zero());
+                }
+            }
+            rows.push(row);
+        }
+        GlMatrix::new(rows)
     }
     #[allow(dead_code)]
     pub fn get(&self, n: usize, m: usize) -> &T {
