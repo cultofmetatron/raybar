@@ -12,7 +12,12 @@ use super::util::fl_eq;
 use std::cmp::{Ord, PartialEq};
 //std::clone::Clone;
 //std::copy::{Copy};
-use std::ops::{Mul, Add, Sub};
+use std::ops::{Add, Mul, Sub};
+//use std::num::{FpCategory};
+use std::convert::From;
+extern crate num_traits;
+
+use num_traits::Zero;
 
 #[allow(dead_code)]
 #[derive(Clone, Debug, PartialEq)]
@@ -20,7 +25,7 @@ pub struct GlMatrix<T: PartialEq + Ord> {
     content: Vec<Vec<T>>,
 }
 
-impl<T: PartialEq + Ord + Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Clone> GlMatrix<T> {
+impl<T: PartialEq + Ord + Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Clone + Zero> GlMatrix<T> {
     // new
     #[allow(dead_code)]
     pub fn new(content: Vec<Vec<T>>) -> GlMatrix<T> {
@@ -33,7 +38,7 @@ impl<T: PartialEq + Ord + Mul<Output = T> + Add<Output = T> + Sub<Output = T> + 
     }
     #[allow(dead_code)]
     pub fn get(&self, n: usize, m: usize) -> &T {
-      &self.content[n][m]
+        &self.content[n][m]
     }
     #[allow(dead_code)]
     pub fn get_row_size(&self) -> usize {
@@ -49,16 +54,53 @@ impl<T: PartialEq + Ord + Mul<Output = T> + Add<Output = T> + Sub<Output = T> + 
     }
     #[allow(dead_code)]
     pub fn is_square(&self) -> bool {
-      let (m, n) = self.get_dimensions();
-      m == n
+        let (m, n) = self.get_dimensions();
+        m == n
     }
-    //pub fn dot(&self, b: GlMatrix<T>) -> {
-        
-   // }
+    #[allow(dead_code)] 
+    pub fn dot(&self, b: GlMatrix<T>) -> GlMatrix<T> {
+        let mut contents: Vec<Vec<T>> = vec![];
+        //for each row, compute all the values
+        let row_size = self.get_row_size();
+        let col_size = self.get_col_size();
+        // row size must equal col size or we should panic as it is an invalid operation
+        if row_size != col_size {
+            panic!("invalid matrix operation: invalid dimensions for dot product");
+        } else {
+            let mut i = 0;
+            loop {
+                //iterate through each row and grab the jth col
+                if i == row_size {
+                    break;
+                } else {
+                    let row: Vec<T> = self.get_row(i);
+                    let mut new_row: Vec<T> = vec![];
+                    let mut j = 0;
+                    loop {
+                        if j == col_size {
+                            break;
+                        } else {
+                            let column = b.get_column(j);
+                            let dot_product_i_j = GlMatrix::dot_list(&row, &column).unwrap_or(Zero::zero());
+                            new_row.push(dot_product_i_j);
+                            j = j + 1;
+                        }
+                    }
+                    contents.push(new_row);
+                    i = i + 1;
+                }
+            }
+            return GlMatrix::new(contents);
+        }
+    }
+    
     #[allow(dead_code)]
-    pub fn dot_list<C: PartialEq + Ord + Mul<Output = C> + Add<Output = C> + Sub<Output = C> + Clone>(row: Vec<C>, col: Vec<C>) -> Option<C> {
+    pub fn dot_list(
+        row: &Vec<T>,
+        col: &Vec<T>,
+    ) -> Option<T> {
         if row.len() == 0 {
-            return None;  //hack for dealing with null generics
+            return None; //hack for dealing with null generics
         }
         if row.len() == col.len() {
             let mut i = 0;
@@ -70,12 +112,13 @@ impl<T: PartialEq + Ord + Mul<Output = T> + Add<Output = T> + Sub<Output = T> + 
                 } else {
                     acc = acc + (row[i].clone() * col[i].clone());
                 }
-            };
+            }
             return Option::Some(acc);
         } else {
             panic!("Invalid Matrix ");
         }
     }
+
     #[allow(dead_code)]
     pub fn get_row(&self, index: usize) -> Vec<T> {
         self.content[index].clone()
@@ -126,16 +169,13 @@ mod tests {
 
     #[test]
     fn test_matrix_new() {
-      // can create new test
-      let matrix: GlMatrix<i64> = GlMatrix::new(vec![
-        vec![1, 2, 3],
-        vec![6, 2, 7],
-        vec![21, 45, 3]
-      ]);
-      assert_eq!(matrix.get_dimensions(), (3, 3));
-      assert!(matrix.is_square());
+        // can create new test
+        let matrix: GlMatrix<i64> =
+            GlMatrix::new(vec![vec![1, 2, 3], vec![6, 2, 7], vec![21, 45, 3]]);
+        assert_eq!(matrix.get_dimensions(), (3, 3));
+        assert!(matrix.is_square());
 
-      assert_eq!(*matrix.get(2, 2), 3);
+        assert_eq!(*matrix.get(2, 2), 3)
     }
 
 }
