@@ -214,5 +214,23 @@ mod tests {
 
 
     }
+    #[test]
+    fn test_identity() {
+        let matrix = GlMatrix::new(vec![
+            vec![1, 0, 0],
+            vec![0, 1, 0],
+            vec![0, 0, 1]
+        ]);
+        assert_eq!(GlMatrix::identity(3), matrix);
+
+        let matrix_b = GlMatrix::new(vec![
+            vec![1, 0, 0],
+            vec![0, 5, 0],
+            vec![4, 0, 2]
+        ]);
+        
+        assert_eq!(matrix_b.dot(&GlMatrix::identity(3)), matrix_b);
+
+    }
 
 }
