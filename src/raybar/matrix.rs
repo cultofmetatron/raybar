@@ -8,16 +8,14 @@
   where for matrix A, A[n][m] yields the item at row n, col m
 
 */
-use super::util::fl_eq;
 use std::cmp::{Ord, PartialEq};
 //std::clone::Clone;
 //std::copy::{Copy};
 use std::ops::{Add, Mul, Sub};
 //use std::num::{FpCategory};
-use std::convert::From;
 extern crate num_traits;
 
-use num_traits::{Zero, One};
+use num_traits::{One, Zero};
 
 #[allow(dead_code)]
 #[derive(Clone, Debug, PartialEq)]
@@ -25,8 +23,9 @@ pub struct GlMatrix<T: PartialEq + Ord> {
     content: Vec<Vec<T>>,
 }
 
-impl<T: PartialEq + Ord + Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Clone + Zero + One>
-    GlMatrix<T>
+impl<
+        T: PartialEq + Ord + Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Clone + Zero + One,
+    > GlMatrix<T>
 {
     #[allow(dead_code)]
     pub fn new(content: Vec<Vec<T>>) -> GlMatrix<T> {
@@ -203,41 +202,21 @@ mod tests {
     }
     #[test]
     fn test_dot_product() {
-        let matrix_a = GlMatrix::new(vec![
-            vec![1, 2, 3],
-            vec![4, 5, 6],
-        ]);
+        let matrix_a = GlMatrix::new(vec![vec![1, 2, 3], vec![4, 5, 6]]);
 
-        let matrix_b = GlMatrix::new(vec![
-            vec![7,   8],
-            vec![9,  10],
-            vec![11, 12],
-        ]);
+        let matrix_b = GlMatrix::new(vec![vec![7, 8], vec![9, 10], vec![11, 12]]);
 
         let matrix_c = matrix_a.dot(&matrix_b);
         print!("{:?}", matrix_c);
-        assert_eq!(matrix_c, GlMatrix::new(vec![
-            vec![58,   64],
-            vec![139,   154],
-        ]))
-
-
+        assert_eq!(matrix_c, GlMatrix::new(vec![vec![58, 64], vec![139, 154],]))
     }
     #[test]
     fn test_identity() {
-        let matrix = GlMatrix::new(vec![
-            vec![1, 0, 0],
-            vec![0, 1, 0],
-            vec![0, 0, 1]
-        ]);
+        let matrix = GlMatrix::new(vec![vec![1, 0, 0], vec![0, 1, 0], vec![0, 0, 1]]);
         assert_eq!(GlMatrix::identity(3), matrix);
 
-        let matrix_b = GlMatrix::new(vec![
-            vec![1, 0, 0],
-            vec![0, 5, 0],
-            vec![4, 0, 2]
-        ]);
-        
+        let matrix_b = GlMatrix::new(vec![vec![1, 0, 0], vec![0, 5, 0], vec![4, 0, 2]]);
+
         assert_eq!(matrix_b.dot(&GlMatrix::identity(3)), matrix_b);
     }
     #[test]
@@ -246,20 +225,19 @@ mod tests {
             vec![0, 9, 3, 0],
             vec![9, 8, 0, 8],
             vec![1, 8, 5, 3],
-            vec![0, 0, 5, 8]
+            vec![0, 0, 5, 8],
         ]);
         let transpose_matrix = GlMatrix::new(vec![
             vec![0, 9, 1, 0],
             vec![9, 8, 8, 0],
             vec![3, 0, 5, 5],
-            vec![0, 8, 3, 8]
+            vec![0, 8, 3, 8],
         ]);
 
         assert_eq!(matrix.transpose(), transpose_matrix);
 
         let transposed_identity: GlMatrix<isize> = GlMatrix::identity(5).transpose();
         assert_eq!(transposed_identity, GlMatrix::identity(5));
-
     }
 
 }
