@@ -24,7 +24,15 @@ pub struct GlMatrix<T: PartialEq + Ord> {
 }
 
 impl<
-        T: PartialEq + Ord + Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Clone + Copy + Zero + One,
+        T: PartialEq
+            + Ord
+            + Mul<Output = T>
+            + Add<Output = T>
+            + Sub<Output = T>
+            + Clone
+            + Copy
+            + Zero
+            + One,
     > GlMatrix<T>
 {
     #[allow(dead_code)]
@@ -160,7 +168,8 @@ impl<
     */
     #[allow(dead_code)]
     pub fn submatrix(&self, row: usize, col: usize) -> GlMatrix<T> {
-        let new_contents: Vec<Vec<T>> = self.content
+        let new_contents: Vec<Vec<T>> = self
+            .content
             .clone()
             .iter()
             .enumerate()
@@ -179,20 +188,21 @@ impl<
     }
     #[allow(dead_code)]
     pub fn minor(&self, row: usize, col: usize) -> T {
-        self
-            .submatrix(row, col)
-            .det()
+        self.submatrix(row, col).det()
     }
-    #[allow(dead_code)]
     pub fn det(&self) -> T {
         if self.is_square() {
-            if self.get_row_size() == 2 {
-                self.det_base()
-            } else {
-                panic!("cannpt comput greater than 2 yet");
-            }
+            self.determinate()
         } else {
             panic!("non square matrices have no determinant!");
+        }
+    }
+    #[allow(dead_code)]
+    fn determinate(&self) -> T {
+        if self.get_row_size() == 2 {
+            self.det_base()
+        } else {
+            panic!("cannpt comput greater than 2 yet");
         }
     }
     #[allow(dead_code)]
@@ -290,16 +300,9 @@ mod tests {
     }
     #[test]
     fn test_submatrix() {
-        let matrix_1 = GlMatrix::new(vec![
-            vec![1, 5, 0],
-            vec![-3, 2, 7],
-            vec![0, 6, -3],
-        ]);
+        let matrix_1 = GlMatrix::new(vec![vec![1, 5, 0], vec![-3, 2, 7], vec![0, 6, -3]]);
 
-        let submatrix_1 = GlMatrix::new(vec![
-            vec![-3, 2],
-            vec![ 0, 6],
-        ]);
+        let submatrix_1 = GlMatrix::new(vec![vec![-3, 2], vec![0, 6]]);
 
         assert_eq!(matrix_1.submatrix(0, 2), submatrix_1);
 
@@ -310,18 +313,10 @@ mod tests {
             vec![-7, 1, -1, 1],
         ]);
 
-        let submatrix_2 = GlMatrix::new(vec![
-            vec![-6, 1, 6],
-            vec![-8, 8, 6],
-            vec![-7, -1, 1],
-        ]);
+        let submatrix_2 = GlMatrix::new(vec![vec![-6, 1, 6], vec![-8, 8, 6], vec![-7, -1, 1]]);
         assert_eq!(matrix_2.submatrix(2, 1), submatrix_2);
 
-        let submatrix_3 = GlMatrix::new(vec![
-            vec![3,  5,  0],
-            vec![2, -1, -7],
-            vec![6, -1,  5],
-        ]);
+        let submatrix_3 = GlMatrix::new(vec![vec![3, 5, 0], vec![2, -1, -7], vec![6, -1, 5]]);
         assert_eq!(submatrix_3.minor(1, 0), 25)
     }
 
