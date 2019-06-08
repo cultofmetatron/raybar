@@ -155,6 +155,28 @@ impl<
         }
         column
     }
+    /*
+        removes column and row from the matrix and returns a new smaller matrix
+    */
+    #[allow(dead_code)]
+    pub fn submatrix(&self, row: usize, col: usize) -> GlMatrix<T> {
+        let new_contents: Vec<Vec<T>> = self.content
+            .clone()
+            .iter()
+            .enumerate()
+            .filter(|&(row_i, _column)| row_i != row)
+            .map(|(_i, column)| {
+                // remve the value at col
+                column
+                    .iter()
+                    .enumerate()
+                    .filter(|&(j, _)| j != col)
+                    .map(|(_j, col)| col.clone())
+                    .collect()
+            })
+            .collect();
+        GlMatrix::new(new_contents)
+    }
     #[allow(dead_code)]
     fn vec_sizing(list: &Vec<Vec<T>>) -> bool {
         /*
@@ -238,6 +260,36 @@ mod tests {
 
         let transposed_identity: GlMatrix<isize> = GlMatrix::identity(5).transpose();
         assert_eq!(transposed_identity, GlMatrix::identity(5));
+    }
+    #[test]
+    fn test_submatrix() {
+        let matrix_1 = GlMatrix::new(vec![
+            vec![1, 5, 0],
+            vec![-3, 2, 7],
+            vec![0, 6, -3],
+        ]);
+
+        let submatrix_1 = GlMatrix::new(vec![
+            vec![-3, 2],
+            vec![ 0, 6],
+        ]);
+
+        assert_eq!(matrix_1.submatrix(0, 2), submatrix_1);
+
+        let matrix_2 = GlMatrix::new(vec![
+            vec![-6, 1, 1, 6],
+            vec![-8, 5, 8, 6],
+            vec![-1, 0, 8, 2],
+            vec![-7, 1, -1, 1],
+        ]);
+
+        let submatrix_2 = GlMatrix::new(vec![
+            vec![-6, 1, 6],
+            vec![-8, 8, 6],
+            vec![-7, -1, 1],
+        ]);
+        assert_eq!(matrix_2.submatrix(2, 1), submatrix_2);
+
     }
 
 }
