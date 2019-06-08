@@ -24,7 +24,7 @@ pub struct GlMatrix<T: PartialEq + Ord> {
 }
 
 impl<
-        T: PartialEq + Ord + Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Clone + Zero + One,
+        T: PartialEq + Ord + Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Clone + Copy + Zero + One,
     > GlMatrix<T>
 {
     #[allow(dead_code)]
@@ -178,6 +178,33 @@ impl<
         GlMatrix::new(new_contents)
     }
     #[allow(dead_code)]
+    pub fn minor(&self, row: usize, col: usize) -> T {
+        self
+            .submatrix(row, col)
+            .det()
+    }
+    #[allow(dead_code)]
+    pub fn det(&self) -> T {
+        if self.is_square() {
+            if self.get_row_size() == 2 {
+                self.det_base()
+            } else {
+                panic!("cannpt comput greater than 2 yet");
+            }
+        } else {
+            panic!("non square matrices have no determinant!");
+        }
+    }
+    #[allow(dead_code)]
+    fn det_base(&self) -> T {
+        //for the case where the matrix is 2 x 2
+        let a = self.content[0][0].clone();
+        let d = self.content[1][1].clone();
+        let b = self.content[0][1].clone();
+        let c = self.content[0][1].clone();
+        (a * d) - (b * c)
+    }
+    #[allow(dead_code)]
     fn vec_sizing(list: &Vec<Vec<T>>) -> bool {
         /*
           for a list of sub lists, if the list's length is 0, return false
@@ -290,6 +317,12 @@ mod tests {
         ]);
         assert_eq!(matrix_2.submatrix(2, 1), submatrix_2);
 
+        let submatrix_3 = GlMatrix::new(vec![
+            vec![3,  5,  0],
+            vec![2, -1, -7],
+            vec![6, -1,  5],
+        ]);
+        assert_eq!(submatrix_3.minor(1, 0), 25)
     }
 
 }
