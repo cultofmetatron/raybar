@@ -16,8 +16,7 @@ use std::ops::{Add, Mul, Sub};
 //use std::num::{FpCategory};
 extern crate num_traits;
 
-
-use num_traits::{One, Zero, Signed};
+use num_traits::{One, Signed, Zero};
 
 #[allow(dead_code)]
 #[derive(Clone, Debug, PartialEq)]
@@ -36,7 +35,7 @@ impl<
             + Zero
             + One
             + Signed
-            + Debug
+            + Debug,
     > GlMatrix<T>
 {
     #[allow(dead_code)]
@@ -215,7 +214,12 @@ impl<
         if self.get_row_size() == 2 {
             self.det_base()
         } else {
-            panic!("cannpt comput greater than 2 yet");
+            //panic!("cannpt comput greater than 2 yet");
+            let size = self.get_col_size();
+            (0..size)
+                .into_iter()
+                .map(|i| self.cofactor(0, i) * *self.get(0, i))
+                .fold(Zero::zero(), |acc, cofactor| acc + cofactor)
         }
     }
     #[allow(dead_code)]
@@ -338,14 +342,33 @@ mod tests {
 
     #[test]
     fn test_cofactor() {
-        let matrix = GlMatrix::new(vec![
-            vec![3, 5, 0],
-            vec![2, -1, -7],
-            vec![6, -1, 5],
-        ]);
+        let matrix = GlMatrix::new(vec![vec![3, 5, 0], vec![2, -1, -7], vec![6, -1, 5]]);
 
         assert_eq!(matrix.cofactor(0, 0), -12);
-        assert_eq!(matrix.minor(1, 0), 25);
+        assert_eq!(matrix.cofactor(1, 0), -25);
+    }
+
+    #[test]
+    fn test_det() {
+        let matrix_a = GlMatrix::new(vec![vec![1, 2, 6], vec![-5, 8, -4], vec![2, 6, 4]]);
+
+        assert_eq!(matrix_a.cofactor(0, 0), 56);
+        assert_eq!(matrix_a.cofactor(0, 1), 12);
+        assert_eq!(matrix_a.cofactor(0, 2), -46);
+
+        assert_eq!(matrix_a.det(), -196);
+
+        let matrix_b = GlMatrix::new(vec![
+            vec![-2, -8, 3, 5],
+            vec![-3, 1, 7, 3],
+            vec![1, 2, -9, 6],
+            vec![-6, 7, 7, -9],
+        ]);
+
+        assert_eq!(matrix_b.cofactor(0, 0), 690);
+        assert_eq!(matrix_b.cofactor(0, 1), 447);
+        assert_eq!(matrix_b.cofactor(0, 2), 210);
+        assert_eq!(matrix_b.cofactor(0, 3), 51);
     }
 
 }
