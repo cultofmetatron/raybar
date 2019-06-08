@@ -9,13 +9,15 @@
 
 */
 use std::cmp::{Ord, PartialEq};
+use std::fmt::Debug;
 //std::clone::Clone;
 //std::copy::{Copy};
 use std::ops::{Add, Mul, Sub};
 //use std::num::{FpCategory};
 extern crate num_traits;
 
-use num_traits::{One, Zero};
+
+use num_traits::{One, Zero, Signed};
 
 #[allow(dead_code)]
 #[derive(Clone, Debug, PartialEq)]
@@ -32,7 +34,9 @@ impl<
             + Clone
             + Copy
             + Zero
-            + One,
+            + One
+            + Signed
+            + Debug
     > GlMatrix<T>
 {
     #[allow(dead_code)]
@@ -187,6 +191,15 @@ impl<
         GlMatrix::new(new_contents)
     }
     #[allow(dead_code)]
+    pub fn cofactor(&self, row: usize, col: usize) -> T {
+        let minor: T = self.minor(row, col);
+        if (row + col) % 2 == 0 {
+            minor
+        } else {
+            -minor
+        }
+    }
+    #[allow(dead_code)]
     pub fn minor(&self, row: usize, col: usize) -> T {
         self.submatrix(row, col).det()
     }
@@ -208,11 +221,14 @@ impl<
     #[allow(dead_code)]
     fn det_base(&self) -> T {
         //for the case where the matrix is 2 x 2
-        let a = self.content[0][0].clone();
-        let d = self.content[1][1].clone();
-        let b = self.content[0][1].clone();
-        let c = self.content[0][1].clone();
-        (a * d) - (b * c)
+        let a = &self.content[0][0];
+        let d = &self.content[1][1];
+        let b = &self.content[0][1];
+        let c = &self.content[1][0];
+        // we deref them here for borrowing
+        let ret = (*a * *d) - (*b * *c);
+        println!("in det_base {:?}*{:?} - {:?}*{:?} {:?}", a, d, b, c, ret);
+        ret
     }
     #[allow(dead_code)]
     fn vec_sizing(list: &Vec<Vec<T>>) -> bool {
@@ -318,6 +334,18 @@ mod tests {
 
         let submatrix_3 = GlMatrix::new(vec![vec![3, 5, 0], vec![2, -1, -7], vec![6, -1, 5]]);
         assert_eq!(submatrix_3.minor(1, 0), 25)
+    }
+
+    #[test]
+    fn test_cofactor() {
+        let matrix = GlMatrix::new(vec![
+            vec![3, 5, 0],
+            vec![2, -1, -7],
+            vec![6, -1, 5],
+        ]);
+
+        assert_eq!(matrix.cofactor(0, 0), -12);
+        assert_eq!(matrix.minor(1, 0), 25);
     }
 
 }
