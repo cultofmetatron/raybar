@@ -210,6 +210,10 @@ impl<
         }
     }
     #[allow(dead_code)]
+    pub fn is_invertible(&self) -> bool {
+        self.det() != Zero::zero()
+    }
+    #[allow(dead_code)]
     fn determinate(&self) -> T {
         if self.get_row_size() == 2 {
             self.det_base()
