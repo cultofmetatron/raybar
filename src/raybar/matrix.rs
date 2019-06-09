@@ -12,11 +12,11 @@ use std::cmp::{Ord, PartialEq};
 use std::fmt::Debug;
 //std::clone::Clone;
 //std::copy::{Copy};
-use std::ops::{Add, Mul, Sub, Div};
+use std::ops::{Add, Div, Mul, Sub};
 //use std::num::{FpCategory};
 extern crate num_traits;
 
-use num_traits::{One, Signed, Zero, ToPrimitive};
+use num_traits::{One, Signed, ToPrimitive, Zero};
 
 #[allow(dead_code)]
 #[derive(Clone, Debug, PartialEq)]
