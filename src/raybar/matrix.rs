@@ -12,11 +12,11 @@ use std::cmp::{Ord, PartialEq};
 use std::fmt::Debug;
 //std::clone::Clone;
 //std::copy::{Copy};
-use std::ops::{Add, Mul, Sub};
+use std::ops::{Add, Mul, Sub, Div};
 //use std::num::{FpCategory};
 extern crate num_traits;
 
-use num_traits::{One, Signed, Zero};
+use num_traits::{One, Signed, Zero, ToPrimitive};
 
 #[allow(dead_code)]
 #[derive(Clone, Debug, PartialEq)]
@@ -30,11 +30,13 @@ impl<
             + Mul<Output = T>
             + Add<Output = T>
             + Sub<Output = T>
+            + Div<Output = T>
             + Clone
             + Copy
             + Zero
             + One
             + Signed
+            + ToPrimitive
             + Debug,
     > GlMatrix<T>
 {
@@ -75,6 +77,10 @@ impl<
     #[allow(dead_code)]
     pub fn get(&self, n: usize, m: usize) -> &T {
         &self.content[n][m]
+    }
+    #[allow(dead_code)]
+    pub fn set(&mut self, n: usize, m: usize, value: T) {
+        self.content[n][m] = value;
     }
     #[allow(dead_code)]
     pub fn get_row_size(&self) -> usize {
