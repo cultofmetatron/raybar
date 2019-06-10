@@ -8,7 +8,7 @@
   where for matrix A, A[n][m] yields the item at row n, col m
 
 */
-use std::cmp::{Ord, PartialEq};
+use std::cmp::{Ord, PartialEq, PartialOrd};
 use std::fmt::Debug;
 //std::clone::Clone;
 //std::copy::{Copy};
@@ -20,13 +20,13 @@ use num_traits::{One, Signed, ToPrimitive, Zero};
 
 #[allow(dead_code)]
 #[derive(Clone, Debug, PartialEq)]
-pub struct GlMatrix<T: PartialEq + Ord> {
+pub struct GlMatrix<T: PartialEq + PartialOrd> {
     content: Vec<Vec<T>>,
 }
 
 impl<
         T: PartialEq
-            + Ord
+            + PartialOrd
             + Mul<Output = T>
             + Add<Output = T>
             + Sub<Output = T>
@@ -49,6 +49,9 @@ impl<
             panic!("all rows must be the same size!");
         }
     }
+    /*
+        generates an identity matrix for a given piece of code
+    */
     #[allow(dead_code)]
     pub fn identity(size: usize) -> GlMatrix<T> {
         let mut rows = vec![];
@@ -219,6 +222,35 @@ impl<
     pub fn is_invertible(&self) -> bool {
         self.det() != Zero::zero()
     }
+    #[allow(dead_code)]
+    pub fn mult(&self, scaler: T) -> GlMatrix<T> {
+        let contents = self.content.iter()
+            .map(|row| {
+                row.iter().map(|val| {
+                    *val * scaler
+                })
+                .collect()
+            })
+            .collect();
+        GlMatrix::new(contents)
+    }
+    /*
+        dumps the data structre into an array of f64s for the prupose of raytracing
+    */
+    #[allow(dead_code)]
+    pub fn to_floats(&self) -> GlMatrix<f64> {
+        let contents = self.content.iter()
+            .map(|row| {
+                row.iter()
+                .map(|val| {
+                    (*val).to_f64().unwrap_or(0.0)
+                })
+                .collect()
+            })
+            .collect();
+        GlMatrix::new(contents)
+    }
+
     #[allow(dead_code)]
     fn determinate(&self) -> T {
         if self.get_row_size() == 2 {
