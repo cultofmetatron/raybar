@@ -223,6 +223,40 @@ impl<
         self.det() != Zero::zero()
     }
     #[allow(dead_code)]
+    pub fn invert(&self) -> Option<GlMatrix<f64>> {
+        let size = self.get_col_size();
+        let det = self.det(); //determing the deterinate
+        // a zero determineate indicates there is no inverse to be had
+        if self.is_square() {
+            Option::None
+        } else if det == Zero::zero() {
+            Option::None
+        } else {
+            let mut invert_contents: Vec<Vec<f64>> = (0..size)
+                .map(|_row| {
+                    (0..size)
+                    .map(|_val| 0.0)
+                    .collect()
+                })
+                .collect();
+            let floating_det = det.to_f64().unwrap();
+            for row in 0..size {
+                for col in 0..size {
+                    invert_contents[col][row] = self.cofactor(row, col)
+                        .to_f64()
+                        .map(|cofactor| {
+                            cofactor / floating_det
+                        })
+                        .unwrap()
+                }
+            }
+
+
+            Option::Some(GlMatrix::new(invert_contents))
+        }
+        
+    }
+    #[allow(dead_code)]
     pub fn mult(&self, scaler: T) -> GlMatrix<T> {
         let contents = self.content.iter()
             .map(|row| {
