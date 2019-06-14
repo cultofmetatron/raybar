@@ -13,6 +13,7 @@ use std::fmt::Debug;
 //std::clone::Clone;
 //std::copy::{Copy};
 use std::ops::{Add, Div, Mul, Sub};
+use std::f64::consts::PI;
 //use std::num::{FpCategory};
 extern crate num_traits;
 
@@ -67,6 +68,15 @@ impl<
             rows.push(row);
         }
         GlMatrix::new(rows)
+    }
+    #[allow(dead_code)]
+    pub fn translation(x: T, y: T, z: T) -> GlMatrix<T> {
+        GlMatrix::new(vec![
+            vec![One::one(), Zero::zero(), Zero::zero(), x],
+            vec![Zero::zero(), One::one(), Zero::zero(), y],
+            vec![Zero::zero(), Zero::zero(), One::one(), z],
+            vec![Zero::zero(), Zero::zero(), Zero::zero(), One::one()]
+        ])
     }
     #[allow(dead_code)]
     pub fn transpose(&self) -> GlMatrix<T> {
