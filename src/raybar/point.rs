@@ -2,7 +2,7 @@ use std::cmp::{PartialEq, PartialOrd};
 use std::fmt::Debug;
 use std::ops::{Add, Div, Mul, Sub};
 extern crate num_traits;
-use num_traits::{One, Signed, ToPrimitive, Zero};
+use num_traits::{One, Signed, ToPrimitive, Zero, Float};
 
 use super::glprimative::GlPrimative;
 use super::matrix::GlMatrix;
@@ -21,6 +21,7 @@ pub struct GlPoint<T: PartialEq
             + One
             + Signed
             + ToPrimitive
+            + Float
             + Debug> {
   matrix: GlMatrix<T>
 }
@@ -37,8 +38,9 @@ impl<T: PartialEq
             + One
             + Signed
             + ToPrimitive
+            + Float
             + Debug> GlPoint<T> {
-              
+
   #[allow(dead_code)]
   pub fn new(x: T, y: T, z: T) -> GlPoint<T> {
     GlPoint{

@@ -16,7 +16,7 @@ use std::ops::{Add, Div, Mul, Sub};
 //use std::f64::consts::PI;
 //use std::num::{FpCategory};
 extern crate num_traits;
-use num_traits::{One, Signed, ToPrimitive, Zero};
+use num_traits::{One, Signed, ToPrimitive, Zero, Float};
 
 use super::glprimative::{GlPrimative};
 
@@ -40,7 +40,8 @@ impl<
             + One
             + Signed
             + ToPrimitive
-            + Debug,
+            + Float
+            + Debug
     > GlMatrix<T>
 {
     #[allow(dead_code)]
@@ -318,6 +319,7 @@ impl<
             + One
             + Signed
             + ToPrimitive
+            + Float
             + Debug,
     > GlPrimative for GlMatrix<T> {
     type Output = GlMatrix<T>;
@@ -373,103 +375,103 @@ mod tests {
     #[test]
     fn test_matrix_new() {
         // can create new test
-        let matrix: GlMatrix<i64> =
-            GlMatrix::new(vec![vec![1, 2, 3], vec![6, 2, 7], vec![21, 45, 3]]);
+        let matrix: GlMatrix<f64> =
+            GlMatrix::new(vec![vec![1.0, 2.0, 3.0], vec![6.0, 2.0, 7.0], vec![21.0, 45.0, 3.0]]);
         assert_eq!(matrix.get_dimensions(), (3, 3));
         assert!(matrix.is_square());
 
-        assert_eq!(*matrix.get(2, 2), 3)
+        assert_eq!(*matrix.get(2, 2), 3.0);
     }
     #[test]
     fn test_dot_product() {
-        let matrix_a = GlMatrix::new(vec![vec![1, 2, 3], vec![4, 5, 6]]);
+        let matrix_a = GlMatrix::new(vec![vec![1.0, 2.0, 3.0], vec![4.0, 5.0, 6.0]]);
 
-        let matrix_b = GlMatrix::new(vec![vec![7, 8], vec![9, 10], vec![11, 12]]);
+        let matrix_b = GlMatrix::new(vec![vec![7.0, 8.0], vec![9.0, 10.0], vec![11.0, 12.0]]);
 
         let matrix_c = matrix_a.dot(&matrix_b);
         print!("{:?}", matrix_c);
-        assert_eq!(matrix_c, GlMatrix::new(vec![vec![58, 64], vec![139, 154],]))
+        assert_eq!(matrix_c, GlMatrix::new(vec![vec![58.0, 64.0], vec![139.0, 154.0]]))
     }
     #[test]
     fn test_identity() {
-        let matrix = GlMatrix::new(vec![vec![1, 0, 0], vec![0, 1, 0], vec![0, 0, 1]]);
+        let matrix = GlMatrix::new(vec![vec![1.0, 0.0, 0.0], vec![0.0, 1.0, 0.0], vec![0.0, 0.0, 1.0]]);
         assert_eq!(GlMatrix::identity(3), matrix);
 
-        let matrix_b = GlMatrix::new(vec![vec![1, 0, 0], vec![0, 5, 0], vec![4, 0, 2]]);
+        let matrix_b = GlMatrix::new(vec![vec![1.0, 0.0, 0.0], vec![0.0, 5.0, 0.0], vec![4.0, 0.0, 2.0]]);
 
         assert_eq!(matrix_b.dot(&GlMatrix::identity(3)), matrix_b);
     }
     #[test]
     fn test_transpose() {
         let matrix = GlMatrix::new(vec![
-            vec![0, 9, 3, 0],
-            vec![9, 8, 0, 8],
-            vec![1, 8, 5, 3],
-            vec![0, 0, 5, 8],
+            vec![0.0, 9.0, 3.0, 0.0],
+            vec![9.0, 8.0, 0.0, 8.0],
+            vec![1.0, 8.0, 5.0, 3.0],
+            vec![0.0, 0.0, 5.0, 8.0],
         ]);
         let transpose_matrix = GlMatrix::new(vec![
-            vec![0, 9, 1, 0],
-            vec![9, 8, 8, 0],
-            vec![3, 0, 5, 5],
-            vec![0, 8, 3, 8],
+            vec![0.0, 9.0, 1.0, 0.0],
+            vec![9.0, 8.0, 8.0, 0.0],
+            vec![3.0, 0.0, 5.0, 5.0],
+            vec![0.0, 8.0, 3.0, 8.0],
         ]);
 
         assert_eq!(matrix.transpose(), transpose_matrix);
 
-        let transposed_identity: GlMatrix<isize> = GlMatrix::identity(5).transpose();
+        let transposed_identity: GlMatrix<f64> = GlMatrix::identity(5).transpose();
         assert_eq!(transposed_identity, GlMatrix::identity(5));
     }
     #[test]
     fn test_submatrix() {
-        let matrix_1 = GlMatrix::new(vec![vec![1, 5, 0], vec![-3, 2, 7], vec![0, 6, -3]]);
+        let matrix_1 = GlMatrix::new(vec![vec![1.0, 5.0, 0.0], vec![-3.0, 2.0, 7.0], vec![0.0, 6.0, -3.0]]);
 
-        let submatrix_1 = GlMatrix::new(vec![vec![-3, 2], vec![0, 6]]);
+        let submatrix_1 = GlMatrix::new(vec![vec![-3.0, 2.0], vec![0.0, 6.0]]);
 
         assert_eq!(matrix_1.submatrix(0, 2), submatrix_1);
 
         let matrix_2 = GlMatrix::new(vec![
-            vec![-6, 1, 1, 6],
-            vec![-8, 5, 8, 6],
-            vec![-1, 0, 8, 2],
-            vec![-7, 1, -1, 1],
+            vec![-6.0, 1.0, 1.0, 6.0],
+            vec![-8.0, 5.0, 8.0, 6.0],
+            vec![-1.0, 0.0, 8.0, 2.0],
+            vec![-7.0, 1.0, -1.0, 1.0],
         ]);
 
-        let submatrix_2 = GlMatrix::new(vec![vec![-6, 1, 6], vec![-8, 8, 6], vec![-7, -1, 1]]);
+        let submatrix_2 = GlMatrix::new(vec![vec![-6.0, 1.0, 6.0], vec![-8.0, 8.0, 6.0], vec![-7.0, -1.0, 1.0]]);
         assert_eq!(matrix_2.submatrix(2, 1), submatrix_2);
 
-        let submatrix_3 = GlMatrix::new(vec![vec![3, 5, 0], vec![2, -1, -7], vec![6, -1, 5]]);
-        assert_eq!(submatrix_3.minor(1, 0), 25)
+        let submatrix_3 = GlMatrix::new(vec![vec![3.0, 5.0, 0.0], vec![2.0, -1.0, -7.0], vec![6.0, -1.0, 5.0]]);
+        assert_eq!(submatrix_3.minor(1, 0), 25.0)
     }
 
     #[test]
     fn test_cofactor() {
-        let matrix = GlMatrix::new(vec![vec![3, 5, 0], vec![2, -1, -7], vec![6, -1, 5]]);
+        let matrix = GlMatrix::new(vec![vec![3.0, 5.0, 0.0], vec![2.0, -1.0, -7.0], vec![6.0, -1.0, 5.0]]);
 
-        assert_eq!(matrix.cofactor(0, 0), -12);
-        assert_eq!(matrix.cofactor(1, 0), -25);
+        assert_eq!(matrix.cofactor(0, 0), -12.0);
+        assert_eq!(matrix.cofactor(1, 0), -25.0);
     }
 
     #[test]
     fn test_det() {
-        let matrix_a = GlMatrix::new(vec![vec![1, 2, 6], vec![-5, 8, -4], vec![2, 6, 4]]);
+        let matrix_a = GlMatrix::new(vec![vec![1.0, 2.0, 6.0], vec![-5.0, 8.0, -4.0], vec![2.0, 6.0, 4.0]]);
 
-        assert_eq!(matrix_a.cofactor(0, 0), 56);
-        assert_eq!(matrix_a.cofactor(0, 1), 12);
-        assert_eq!(matrix_a.cofactor(0, 2), -46);
+        assert_eq!(matrix_a.cofactor(0, 0), 56.0);
+        assert_eq!(matrix_a.cofactor(0, 1), 12.0);
+        assert_eq!(matrix_a.cofactor(0, 2), -46.0);
 
-        assert_eq!(matrix_a.det(), -196);
+        assert_eq!(matrix_a.det(), -196.0);
 
         let matrix_b = GlMatrix::new(vec![
-            vec![-2, -8, 3, 5],
-            vec![-3, 1, 7, 3],
-            vec![1, 2, -9, 6],
-            vec![-6, 7, 7, -9],
+            vec![-2.0, -8.0, 3.0, 5.0],
+            vec![-3.0, 1.0, 7.0, 3.0],
+            vec![1.0, 2.0, -9.0, 6.0],
+            vec![-6.0, 7.0, 7.0, -9.0],
         ]);
 
-        assert_eq!(matrix_b.cofactor(0, 0), 690);
-        assert_eq!(matrix_b.cofactor(0, 1), 447);
-        assert_eq!(matrix_b.cofactor(0, 2), 210);
-        assert_eq!(matrix_b.cofactor(0, 3), 51);
+        assert_eq!(matrix_b.cofactor(0, 0), 690.0);
+        assert_eq!(matrix_b.cofactor(0, 1), 447.0);
+        assert_eq!(matrix_b.cofactor(0, 2), 210.0);
+        assert_eq!(matrix_b.cofactor(0, 3), 51.0);
     }
 
 }
