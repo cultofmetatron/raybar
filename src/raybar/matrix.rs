@@ -8,33 +8,13 @@
   where for matrix A, A[n][m] yields the item at row n, col m
 
 */
-use std::cmp::{PartialEq, PartialOrd};
-use std::fmt::Debug;
-//std::clone::Clone;
-//std::copy::{Copy};
-use std::ops::{Add, Div, Mul, Sub};
+extern crate num_traits;
+use super::glprimative::{GlPrimative, MatrixNumber};
+
 //use std::f64::consts::PI;
 //use std::num::{FpCategory};
-extern crate num_traits;
-use num_traits::{One, Signed, ToPrimitive, Zero, Float};
+use num_traits::{One, ToPrimitive, Zero, Float};
 
-use super::glprimative::{GlPrimative};
-
-
-pub trait MatrixNumber = PartialEq
-            + PartialOrd
-            + Mul<Output = Self>
-            + Add<Output = Self>
-            + Sub<Output = Self>
-            + Div<Output = Self>
-            + Clone
-            + Copy
-            + Zero
-            + One
-            + Signed
-            + ToPrimitive
-            + Float
-            + Debug;
 
 #[allow(dead_code)]
 #[derive(Clone, Debug, PartialEq)]
@@ -310,7 +290,7 @@ impl<
 
 impl<
         T: MatrixNumber
-    > GlPrimative for GlMatrix<T> {
+    > GlPrimative<T> for GlMatrix<T> {
     type Output = GlMatrix<T>;
     type Input = GlMatrix<T>;
 
@@ -351,8 +331,6 @@ impl<
             return GlMatrix::new(contents);
         }
     }
-
-
 }
 
 
@@ -457,10 +435,22 @@ mod tests {
             vec![-6.0, 7.0, 7.0, -9.0],
         ]);
 
+
+        let (x, y, z) = (6.0, 3.0, 6.0);
+        let matrix_c = GlMatrix::new(vec![
+            vec![1.0, 0.0, 0.0, x],
+            vec![0.0, 1.0, 0.0, y],
+            vec![0.0, 0.0, 1.0, x],
+            vec![0.0, 0.0, 0.0, 0.0],
+        ]);
+
+        let magnitude = Float::sqrt(x.powi(2) + y.powi(2) + z.powi(2));
+
         assert_eq!(matrix_b.cofactor(0, 0), 690.0);
         assert_eq!(matrix_b.cofactor(0, 1), 447.0);
         assert_eq!(matrix_b.cofactor(0, 2), 210.0);
         assert_eq!(matrix_b.cofactor(0, 3), 51.0);
+        assert_eq!(matrix_c.det(), 0.0);
     }
 
 }
