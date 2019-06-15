@@ -8,16 +8,18 @@
   where for matrix A, A[n][m] yields the item at row n, col m
 
 */
-use std::cmp::{Ord, PartialEq, PartialOrd};
+use std::cmp::{PartialEq, PartialOrd};
 use std::fmt::Debug;
 //std::clone::Clone;
 //std::copy::{Copy};
 use std::ops::{Add, Div, Mul, Sub};
-use std::f64::consts::PI;
+//use std::f64::consts::PI;
 //use std::num::{FpCategory};
 extern crate num_traits;
-
 use num_traits::{One, Signed, ToPrimitive, Zero};
+
+use super::glprimative::{GlPrimative};
+
 
 #[allow(dead_code)]
 #[derive(Clone, Debug, PartialEq)]
@@ -112,65 +114,7 @@ impl<
         let (m, n) = self.get_dimensions();
         m == n
     }
-    #[allow(dead_code)]
-    pub fn dot(&self, b: &GlMatrix<T>) -> GlMatrix<T> {
-        let mut contents: Vec<Vec<T>> = vec![];
-        //for each row, compute all the values
-        let row_size = self.get_row_size();
-        let col_size = b.get_col_size();
-        // row size must equal col size or we should panic as it is an invalid operation
-        if row_size != col_size {
-            panic!("invalid matrix operation: invalid dimensions for dot product");
-        } else {
-            let mut i = 0;
-            loop {
-                //iterate through each row and grab the jth col
-                if i == row_size {
-                    break;
-                } else {
-                    let row: Vec<T> = self.get_row(i);
-                    let mut new_row: Vec<T> = vec![];
-                    let mut j = 0;
-                    loop {
-                        if j == col_size {
-                            break;
-                        } else {
-                            let column = b.get_column(j);
-                            let dot_product_i_j =
-                                GlMatrix::dot_list(&row, &column).unwrap_or(Zero::zero());
-                            new_row.push(dot_product_i_j);
-                            j = j + 1;
-                        }
-                    }
-                    contents.push(new_row);
-                    i = i + 1;
-                }
-            }
-            return GlMatrix::new(contents);
-        }
-    }
-
-    #[allow(dead_code)]
-    pub fn dot_list(row: &Vec<T>, col: &Vec<T>) -> Option<T> {
-        if row.len() == 0 {
-            return None; //hack for dealing with null generics
-        }
-        if row.len() == col.len() {
-            let mut i = 0;
-            let mut acc = row[i].clone() * col[i].clone();
-            loop {
-                i = i + 1;
-                if i == row.len() {
-                    break;
-                } else {
-                    acc = acc + (row[i].clone() * col[i].clone());
-                }
-            }
-            return Option::Some(acc);
-        } else {
-            panic!("Invalid Matrix ");
-        }
-    }
+    
 
     #[allow(dead_code)]
     pub fn get_row(&self, index: usize) -> Vec<T> {
@@ -284,6 +228,27 @@ impl<
             .collect();
         GlMatrix::new(contents)
     }
+        #[allow(dead_code)]
+    fn dot_list(row: &Vec<T>, col: &Vec<T>) -> Option<T> {
+        if row.len() == 0 {
+            return None; //hack for dealing with null generics
+        }
+        if row.len() == col.len() {
+            let mut i = 0;
+            let mut acc = row[i].clone() * col[i].clone();
+            loop {
+                i = i + 1;
+                if i == row.len() {
+                    break;
+                } else {
+                    acc = acc + (row[i].clone() * col[i].clone());
+                }
+            }
+            return Option::Some(acc);
+        } else {
+            panic!("Invalid Matrix ");
+        }
+    }
 
     #[allow(dead_code)]
     fn determinate(&self) -> T {
@@ -339,6 +304,66 @@ impl<
         }
     }
 }
+
+impl<
+        T: PartialEq
+            + PartialOrd
+            + Mul<Output = T>
+            + Add<Output = T>
+            + Sub<Output = T>
+            + Div<Output = T>
+            + Clone
+            + Copy
+            + Zero
+            + One
+            + Signed
+            + ToPrimitive
+            + Debug,
+    > GlPrimative for GlMatrix<T> {
+    type Output = GlMatrix<T>;
+    type Input = GlMatrix<T>;
+
+    #[allow(dead_code)]
+    fn dot(&self, b: &Self::Input) -> GlMatrix<T> {
+        let mut contents: Vec<Vec<T>> = vec![];
+        //for each row, compute all the values
+        let row_size = self.get_row_size();
+        let col_size = b.get_col_size();
+        // row size must equal col size or we should panic as it is an invalid operation
+        if row_size != col_size {
+            panic!("invalid matrix operation: invalid dimensions for dot product");
+        } else {
+            let mut i = 0;
+            loop {
+                //iterate through each row and grab the jth col
+                if i == row_size {
+                    break;
+                } else {
+                    let row: Vec<T> = self.get_row(i);
+                    let mut new_row: Vec<T> = vec![];
+                    let mut j = 0;
+                    loop {
+                        if j == col_size {
+                            break;
+                        } else {
+                            let column = b.get_column(j);
+                            let dot_product_i_j =
+                                GlMatrix::dot_list(&row, &column).unwrap_or(Zero::zero());
+                            new_row.push(dot_product_i_j);
+                            j = j + 1;
+                        }
+                    }
+                    contents.push(new_row);
+                    i = i + 1;
+                }
+            }
+            return GlMatrix::new(contents);
+        }
+    }
+
+
+}
+
 
 #[cfg(test)]
 mod tests {

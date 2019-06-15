@@ -1,67 +1,3 @@
-use std::cmp::PartialEq;
-use std::ops;
-/*
-    GlPrimative is a shared set of traints between the point, vector and matrix operations
-    allowing all 3 to interoperate with each other
-*/
-
-// for comparing floating points
-use super::util::fl_eq;
-
-#[allow(dead_code)]
-pub trait GlPrimative {
-    fn to_tuple(self) -> (f64, f64, f64, usize);
-}
-
-#[allow(dead_code)]
-#[derive(Clone, Copy, Debug)]
-pub struct GlPoint {
-    x: f64,
-    y: f64,
-    z: f64,
-}
-
-impl PartialEq for GlPoint {
-    fn eq(&self, b: &GlPoint) -> bool {
-        fl_eq(self.x, b.x) && fl_eq(self.y, b.y) && fl_eq(self.z, b.z)
-    }
-}
-
-impl GlPoint {
-    #[allow(dead_code)]
-    pub fn new(x: f64, y: f64, z: f64) -> GlPoint {
-        GlPoint { x, y, z }
-    }
-}
-
-impl GlPrimative for GlPoint {
-    fn to_tuple(self) -> (f64, f64, f64, usize) {
-        (self.x, self.y, self.z, 1)
-    }
-}
-
-impl ops::Add<GlVector> for GlPoint {
-    type Output = GlPoint;
-
-    fn add(self, rhs: GlVector) -> GlPoint {
-        GlPoint::new(self.x + rhs.x, self.y + rhs.y, self.z + rhs.z)
-    }
-}
-
-impl ops::Sub<GlPoint> for GlPoint {
-    type Output = GlVector;
-
-    fn sub(self, rhs: GlPoint) -> GlVector {
-        GlVector::new(self.x - rhs.x, self.y - rhs.y, self.z - rhs.z)
-    }
-}
-
-impl ops::Sub<GlVector> for GlPoint {
-    type Output = GlPoint;
-    fn sub(self, rhs: GlVector) -> GlPoint {
-        GlPoint::new(self.x - rhs.x, self.y - rhs.y, self.z - rhs.z)
-    }
-}
 
 #[allow(dead_code)]
 #[derive(Clone, Copy, Debug)]
@@ -111,7 +47,7 @@ impl PartialEq for GlVector {
 }
 
 impl GlPrimative for GlVector {
-    fn to_tuple(self) -> (f64, f64, f64, usize) {
+    fn to_tuple(&self) -> (f64, f64, f64, usize) {
         (self.x, self.y, self.z, 0)
     }
 }
@@ -151,6 +87,8 @@ impl ops::Div<f64> for GlVector {
         GlVector::new(self.x / rhs, self.y / rhs, self.z / rhs)
     }
 }
+
+
 
 #[cfg(test)]
 mod tests {
