@@ -1,3 +1,5 @@
+#![feature(trait_alias)]
+
 //use crate::glprimatives::GlPrimative;
 //use raybar::*
 mod raybar;

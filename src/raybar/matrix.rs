@@ -21,19 +21,12 @@ use num_traits::{One, Signed, ToPrimitive, Zero, Float};
 use super::glprimative::{GlPrimative};
 
 
-#[allow(dead_code)]
-#[derive(Clone, Debug, PartialEq)]
-pub struct GlMatrix<T: PartialEq + PartialOrd> {
-    content: Vec<Vec<T>>,
-}
-
-impl<
-        T: PartialEq
+pub trait MatrixNumber = PartialEq
             + PartialOrd
-            + Mul<Output = T>
-            + Add<Output = T>
-            + Sub<Output = T>
-            + Div<Output = T>
+            + Mul<Output = Self>
+            + Add<Output = Self>
+            + Sub<Output = Self>
+            + Div<Output = Self>
             + Clone
             + Copy
             + Zero
@@ -41,7 +34,16 @@ impl<
             + Signed
             + ToPrimitive
             + Float
-            + Debug
+            + Debug;
+
+#[allow(dead_code)]
+#[derive(Clone, Debug, PartialEq)]
+pub struct GlMatrix<T: MatrixNumber> {
+    content: Vec<Vec<T>>,
+}
+
+impl<
+        T: MatrixNumber
     > GlMatrix<T>
 {
     #[allow(dead_code)]
@@ -307,20 +309,7 @@ impl<
 }
 
 impl<
-        T: PartialEq
-            + PartialOrd
-            + Mul<Output = T>
-            + Add<Output = T>
-            + Sub<Output = T>
-            + Div<Output = T>
-            + Clone
-            + Copy
-            + Zero
-            + One
-            + Signed
-            + ToPrimitive
-            + Float
-            + Debug,
+        T: MatrixNumber
     > GlPrimative for GlMatrix<T> {
     type Output = GlMatrix<T>;
     type Input = GlMatrix<T>;
