@@ -89,7 +89,7 @@ impl<
             let sum = self.map(|(i, j), val| {
                 let left = val;
                 let right = rhs.get(i, j);
-                println!("({:?} {:?}) => {:?} + {:?} = {:?}", i, j, left, right, *left + *right);
+                //println!("({:?} {:?}) => {:?} + {:?} = {:?}", i, j, left, right, *left + *right);
                 *left + *right
             });
            Ok(sum)
@@ -498,7 +498,7 @@ mod tests {
 
         let matrix_sum = matrix_a.add(matrix_b).unwrap();
 
-        println!("{:?}", matrix_sum);
+        //println!("{:?}", matrix_sum);
 
         let matrix_sumation = GlMatrix::new(vec![
             vec![-1.0, -7.0, 0.0, 6.0],
