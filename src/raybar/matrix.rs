@@ -64,6 +64,38 @@ impl<
         ])
     }
     #[allow(dead_code)]
+    pub fn map<F, P: MatrixNumber>(&self, func: F) -> GlMatrix<P>
+    where F: Fn((usize, usize), &T) -> P {
+        let contents = self.content
+            .iter()
+            .enumerate()
+            .map(|(i, row)| {
+                row
+                .iter()
+                .enumerate()
+                .map(|(j, val)| {
+                    func((i, j), val)
+                })
+                .collect()
+            })
+            .collect();
+        GlMatrix::new(contents)
+    }
+    #[allow(dead_code)]
+    pub fn add(&self, rhs: GlMatrix<T>) -> Result<GlMatrix<T>, &'static str> {
+        if self.get_dimensions() != rhs.get_dimensions() {
+            Err("incompatible dimensions")
+        } else {
+            let sum = self.map(|(i, j), val| {
+                let left = val;
+                let right = rhs.get(i, j);
+                println!("({:?} {:?}) => {:?} + {:?} = {:?}", i, j, left, right, *left + *right);
+                *left + *right
+            });
+           Ok(sum)
+        }
+    }
+    #[allow(dead_code)]
     pub fn transpose(&self) -> GlMatrix<T> {
         let mut rows = vec![];
         for j in 0..self.get_col_size() {
@@ -444,13 +476,37 @@ mod tests {
             vec![0.0, 0.0, 0.0, 0.0],
         ]);
 
-        let magnitude = Float::sqrt(x.powi(2) + y.powi(2) + z.powi(2));
+        //let magnitude = Float::sqrt(x.powi(2) + y.powi(2) + z.powi(2));
 
         assert_eq!(matrix_b.cofactor(0, 0), 690.0);
         assert_eq!(matrix_b.cofactor(0, 1), 447.0);
         assert_eq!(matrix_b.cofactor(0, 2), 210.0);
         assert_eq!(matrix_b.cofactor(0, 3), 51.0);
         assert_eq!(matrix_c.det(), 0.0);
+    }
+    #[test]
+    pub fn test_plus() {
+        let matrix_a = GlMatrix::new(vec![
+            vec![-2.0, -8.0, 3.0, 5.0],
+            vec![-3.0, 1.0, 7.0, 3.0],
+        ]);
+
+        let matrix_b = GlMatrix::new(vec![
+            vec![1.0, 1.0, -3.0, 1.0],
+            vec![1.0, 1.0, 7.0, 1.0],
+        ]);
+
+        let matrix_sum = matrix_a.add(matrix_b).unwrap();
+
+        println!("{:?}", matrix_sum);
+
+        let matrix_sumation = GlMatrix::new(vec![
+            vec![-1.0, -7.0, 0.0, 6.0],
+            vec![-2.0, 2.0, 14.0, 4.0],
+        ]);
+
+
+        assert_eq!(matrix_sum, matrix_sumation);
     }
 
 }
