@@ -96,6 +96,20 @@ impl<
         }
     }
     #[allow(dead_code)]
+    pub fn sub(&self, rhs: GlMatrix<T>) -> Result<GlMatrix<T>, &'static str> {
+        if self.get_dimensions() != rhs.get_dimensions() {
+            Err("incompatible dimensions")
+        } else {
+            let sum = self.map(|(i, j), val| {
+                let left = val;
+                let right = rhs.get(i, j);
+                //println!("({:?} {:?}) => {:?} + {:?} = {:?}", i, j, left, right, *left + *right);
+                *left - *right
+            });
+           Ok(sum)
+        }
+    }
+    #[allow(dead_code)]
     pub fn transpose(&self) -> GlMatrix<T> {
         let mut rows = vec![];
         for j in 0..self.get_col_size() {
