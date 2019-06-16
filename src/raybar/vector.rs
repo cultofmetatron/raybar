@@ -10,7 +10,7 @@ use super::point::GlPoint;
 
 
 #[allow(dead_code)]
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct GlVector<T: MatrixNumber> {
   matrix: GlMatrix<T>
 }
@@ -36,10 +36,19 @@ impl<T: MatrixNumber> GlVector<T> {
     &self.matrix.get(0, 0)
   }
   pub fn get_y(&self) -> &T {
-    &self.matrix.get(0, 1)
+    &self.matrix.get(1, 0)
   }
   pub fn get_z(&self) -> &T {
-    &self.matrix.get(0, 2)
+    &self.matrix.get(2, 0)
+  }
+  #[allow(dead_code)]
+  pub fn to_tuple(&self) -> (T, T, T, T) {
+    (
+      (self.get_x()).clone(), 
+      (self.get_y()).clone(),
+      (self.get_z()).clone(),
+      Zero::zero()
+    )
   }
 }
 
@@ -78,12 +87,19 @@ impl<T: MatrixNumber> Neg for GlVector<T> {
 mod tests {
     // Note this useful idiom: importing names from outer (for mod tests) scope.
     use super::*;
+    #[test]
     pub fn test_create_vector() {
-
+       assert_eq!(
+            GlVector::new(2.3, 42.5, 84.0).to_tuple(),
+            (2.3, 42.5, 84.0, 0.0)
+        );
     }
-
+    #[test]
     pub fn test_vector_plus_vector() {
-
+      let a: GlVector<f64> = GlVector::new(2.3, 42.5, 84.0);
+      let b: GlVector<f64> = GlVector::new(2.3, -42.5, 84.0);
+      let new_vector = a + b;
+      assert_eq!(new_vector, GlVector::new(4.6, 0.0, 168.0));
     }
 
 }
