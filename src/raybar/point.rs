@@ -19,21 +19,18 @@ impl<T: MatrixNumber> GlPoint<T> {
   pub fn new(x: T, y: T, z: T) -> GlPoint<T> {
     GlPoint{
       matrix: GlMatrix::new(vec![
-        vec![x],
-        vec![y],
-        vec![z],
-        vec![One::one()]
+        vec![x, y, z, One::one()]
       ])
     }
   }
-
+  #[allow(dead_code)]
   pub fn to_tuple(&self) -> (T, T, T, T) {
-    let col = self.matrix.get_column(0);
+    //let col = self.matrix.get_column(0);
     (
-      col[0].clone(),
-      col[1].clone(),
-      col[2].clone(),
-      col[3].clone()
+      self.matrix.get(0, 0).clone(),
+      self.matrix.get(0, 1).clone(),
+      self.matrix.get(0, 2).clone(),
+      self.matrix.get(0, 3).clone()
     )
   }
 }
