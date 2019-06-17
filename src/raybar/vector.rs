@@ -2,7 +2,7 @@ use std::cmp::{PartialEq, PartialOrd};
 use std::fmt::Debug;
 use std::ops::{Add, Div, Mul, Sub, Neg};
 extern crate num_traits;
-use num_traits::{One, Signed, ToPrimitive, Zero};
+use num_traits::{One, Signed, ToPrimitive, Zero, Float};
 
 use super::glprimative::{MatrixNumber, GlPrimative};
 use super::matrix::{GlMatrix};
@@ -50,6 +50,14 @@ impl<T: MatrixNumber> GlVector<T> {
       Zero::zero()
     )
   }
+  #[allow(dead_code)]
+  pub fn magnitude(&self) -> T {
+    Float::sqrt(
+      *self.get_x() * *self.get_x() +
+      *self.get_y() * *self.get_y() +
+      *self.get_z() * *self.get_z()
+    )
+  }
 }
 
 impl<T: MatrixNumber> Add<GlVector<T>> for GlVector<T> {
@@ -82,6 +90,17 @@ impl<T: MatrixNumber> Neg for GlVector<T> {
 }
 
 
+impl<T: MatrixNumber> Mul<T> for GlVector<T> {
+    type Output = GlVector<T>;
+    fn mul(self, rhs: T) -> GlVector<T> {
+        GlVector::new(
+          *self.get_x() * rhs,
+          *self.get_y() * rhs,
+          *self.get_z() * rhs)
+    }
+}
+
+
 
 #[cfg(test)]
 mod tests {
@@ -100,6 +119,38 @@ mod tests {
       let b: GlVector<f64> = GlVector::new(2.3, -42.5, 84.0);
       let new_vector = a + b;
       assert_eq!(new_vector, GlVector::new(4.6, 0.0, 168.0));
+    }
+
+    #[test]
+    fn test_vector_minus_vector() {
+        let a = GlVector::new(2.3, 42.5, 84.0);
+        let b = GlVector::new(2.3, 42.5, 84.0);
+        let new_vector = a - b;
+        assert_eq!(new_vector, GlVector::new(0.0, 0.0, 0.0));
+    }
+
+    #[test]
+    fn test_vector_negation() {
+        assert_eq!(
+            GlVector::new(4.0, -2.0, -8.0).negate(),
+            GlVector::new(-4.0, 2.0, 8.0)
+        );
+    }
+
+    #[test]
+    fn test_vector_mult_scalar() {
+        assert_eq!(
+            GlVector::new(2.0, 4.0, 6.0) * 2.0,
+            GlVector::new(4.0, 8.0, 12.0)
+        );
+    }
+
+    #[test]
+    fn test_vector_magnitude() {
+        assert_eq!(GlVector::new(1.0, 0.0, 0.0).magnitude(), 1.0);
+        assert_eq!(GlVector::new(0.0, 1.0, 0.0).magnitude(), 1.0);
+        assert_eq!(GlVector::new(0.0, 0.0, 1.0).magnitude(), 1.0);
+        assert_eq!(GlVector::new(0.0, 1.0, 1.0).magnitude(), Float::sqrt(2.0));
     }
 
 }
