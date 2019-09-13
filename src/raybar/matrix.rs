@@ -10,7 +10,7 @@
 */
 extern crate num_traits;
 use super::glprimative::{GlPrimative, MatrixNumber};
-
+use super::point::{GlPoint};
 //use std::f64::consts::PI;
 //use std::num::{FpCategory};
 use num_traits::{One, ToPrimitive, Zero, Float};
@@ -232,15 +232,6 @@ impl<
             Option::Some(GlMatrix::new(invert_contents))
         }
     }
-    #[allow(dead_code)]
-    pub fn mult(&self, scaler: T) -> GlMatrix<T> {
-        let contents = self
-            .content
-            .iter()
-            .map(|row| row.iter().map(|val| *val * scaler).collect())
-            .collect();
-        GlMatrix::new(contents)
-    }
     /*
         dumps the data structre into an array of f64s for the prupose of raytracing
     */
@@ -331,7 +322,29 @@ impl<
             }
         }
     }
+    #[allow(dead_code)]
+    pub fn mult(&self, scaler: T) -> GlMatrix<T> {
+        let contents = self
+            .content
+            .iter()
+            .map(|row| row.iter().map(|val| *val * scaler).collect())
+            .collect();
+        GlMatrix::new(contents)
+    }
+
 }
+
+/*
+impl<
+    T: MatrixNumber
+> GlPrimative<T> for GlMatrix<T> {
+    type Output = GlPoint<T>;
+    type Input = GlPoint<T>;
+
+
+
+}
+*/
 
 impl<
         T: MatrixNumber
@@ -376,6 +389,7 @@ impl<
             return GlMatrix::new(contents);
         }
     }
+
 }
 
 
