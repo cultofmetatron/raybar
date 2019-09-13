@@ -63,6 +63,13 @@ impl<T: MatrixNumber> GlVector<T> {
     let mag = self.magnitude();
     GlVector::new(*self.get_x()/ mag, *self.get_y() / mag, *self.get_z() / mag)
   }
+  #[allow(dead_code)]
+  pub fn dot(self, v2: GlVector<T>) -> T {
+      self.get_x().clone() * v2.get_x().clone() +
+      self.get_y().clone() * v2.get_y().clone() +
+      self.get_z().clone() * v2.get_z().clone()
+  }
+
 }
 
 impl<T: MatrixNumber> Add<GlVector<T>> for GlVector<T> {
@@ -171,6 +178,13 @@ mod tests {
             GlVector::new(1.0, 2.0, 3.0).normalize(),
             GlVector::new(0.2672612419124244, 0.5345224838248488, 0.8017837257372732)
         );
+    }
+
+    #[test]
+    fn test_vector_dot_product() {
+        let a = GlVector::new(1.0, 2.0, 3.0);
+        let b = GlVector::new(2.0, 3.0, 4.0);
+        assert_eq!(a.dot(b), 20.0);
     }
 
 }
