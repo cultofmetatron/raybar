@@ -59,15 +59,22 @@ impl<T: MatrixNumber> GlVector<T> {
     )
   }
   #[allow(dead_code)]
-  pub fn normalize(self) -> GlVector<T> {
+  pub fn normalize(&self) -> GlVector<T> {
     let mag = self.magnitude();
     GlVector::new(*self.get_x()/ mag, *self.get_y() / mag, *self.get_z() / mag)
   }
   #[allow(dead_code)]
-  pub fn dot(self, v2: GlVector<T>) -> T {
+  pub fn dot(&self, v2: &GlVector<T>) -> T {
       self.get_x().clone() * v2.get_x().clone() +
       self.get_y().clone() * v2.get_y().clone() +
       self.get_z().clone() * v2.get_z().clone()
+  }
+  pub fn cross(&self, v2: &GlVector<T>) -> GlVector<T> {
+    GlVector::new(
+            *self.get_y() * *v2.get_z() - *self.get_z() * *v2.get_y(),
+            *self.get_z() * *v2.get_x() - *self.get_x() * *v2.get_z(),
+            *self.get_x() * *v2.get_y() - *self.get_y() * *v2.get_x(),
+        )
   }
 
 }
@@ -184,7 +191,15 @@ mod tests {
     fn test_vector_dot_product() {
         let a = GlVector::new(1.0, 2.0, 3.0);
         let b = GlVector::new(2.0, 3.0, 4.0);
-        assert_eq!(a.dot(b), 20.0);
+        assert_eq!(a.dot(&b), 20.0);
+    }
+
+    #[test]
+    fn test_vector_cross_product() {
+        let a = GlVector::new(1.0, 2.0, 3.0);
+        let b = GlVector::new(2.0, 3.0, 4.0);
+        assert_eq!(a.cross(&b), GlVector::new(-1.0, 2.0, -1.0));
+        assert_eq!(b.cross(&a), GlVector::new(1.0, -2.0, 1.0));
     }
 
 }
