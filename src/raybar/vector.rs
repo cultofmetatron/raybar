@@ -58,6 +58,11 @@ impl<T: MatrixNumber> GlVector<T> {
       *self.get_z() * *self.get_z()
     )
   }
+  #[allow(dead_code)]
+  pub fn normalize(self) -> GlVector<T> {
+    let mag = self.magnitude();
+    GlVector::new(*self.get_x()/ mag, *self.get_y() / mag, *self.get_z() / mag)
+  }
 }
 
 impl<T: MatrixNumber> Add<GlVector<T>> for GlVector<T> {
@@ -151,6 +156,21 @@ mod tests {
         assert_eq!(GlVector::new(0.0, 1.0, 0.0).magnitude(), 1.0);
         assert_eq!(GlVector::new(0.0, 0.0, 1.0).magnitude(), 1.0);
         assert_eq!(GlVector::new(0.0, 1.0, 1.0).magnitude(), Float::sqrt(2.0));
+    }
+    #[test]
+    fn test_vector_normalize() {
+        assert_eq!(
+            GlVector::new(4.0, 0.0, 0.0).normalize(),
+            GlVector::new(1.0, 0.0, 0.0)
+        );
+        assert_eq!(
+            GlVector::new(0.0, 6.0, 0.0).normalize(),
+            GlVector::new(0.0, 1.0, 0.0)
+        );
+        assert_eq!(
+            GlVector::new(1.0, 2.0, 3.0).normalize(),
+            GlVector::new(0.2672612419124244, 0.5345224838248488, 0.8017837257372732)
+        );
     }
 
 }
