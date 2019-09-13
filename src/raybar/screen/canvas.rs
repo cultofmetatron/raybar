@@ -6,7 +6,7 @@ use std::vec::Vec;
 use image::{ImageBuffer, Rgb};
 /*
 
-a Canvas is a core primative for hosling the representation of a screen
+a Canvas is a core primative for hosting the representation of a screen
 it is mutable for perfomrance
 
 new -> returns a black canvas

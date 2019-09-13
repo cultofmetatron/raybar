@@ -210,7 +210,7 @@ impl<
         let size = self.get_col_size();
         let det = self.det(); //determing the deterinate
                               // a zero determineate indicates there is no inverse to be had
-        if self.is_square() {
+        if !self.is_square() {
             Option::None
         } else if det == Zero::zero() {
             Option::None
@@ -497,6 +497,28 @@ mod tests {
         assert_eq!(matrix_b.cofactor(0, 2), 210.0);
         assert_eq!(matrix_b.cofactor(0, 3), 51.0);
         assert_eq!(matrix_c.det(), 0.0);
+    }
+    #[test]
+    fn test_invert() {
+        let matrix_a = GlMatrix::new(vec![
+            vec![8.0, -5.0, 9.0, 2.0],
+            vec![7.0, 5.0, 6.0, 1.0],
+            vec![-6.0, 0.0, 9.0, 6.0],
+            vec![-3.0, 0.0, -9.0, -4.0]
+        ]);
+
+        let inverted_example = GlMatrix::new(vec![
+            vec![-0.15384615384615385, -0.15384615384615385, -0.28205128205128205, -0.5384615384615384],
+            vec![-0.07692307692307693, 0.12307692307692308, 0.02564102564102564, 0.03076923076923077],
+            vec![0.358974358974359, 0.358974358974359, 0.4358974358974359, 0.9230769230769231],
+            vec![-0.6923076923076923, -0.6923076923076923, -0.7692307692307693, -1.9230769230769231]
+        ]);
+
+        //println!("the det is {:?}", matrix_a.det());
+        let inverted = matrix_a.invert().unwrap();
+        //println!("inverted: {:?}", inverted);
+        assert_eq!(matrix_a.invert().unwrap(), inverted_example);
+
     }
     #[test]
     pub fn test_plus() {
