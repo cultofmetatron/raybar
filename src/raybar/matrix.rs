@@ -301,7 +301,6 @@ impl<
         let c = &self.content[1][0];
         // we deref them here for borrowing
         let ret = (*a * *d) - (*b * *c);
-        println!("in det_base {:?}*{:?} - {:?}*{:?} {:?}", a, d, b, c, ret);
         ret
     }
     #[allow(dead_code)]
@@ -402,7 +401,6 @@ mod tests {
         let matrix_b = GlMatrix::new(vec![vec![7.0, 8.0], vec![9.0, 10.0], vec![11.0, 12.0]]);
 
         let matrix_c = matrix_a.dot(&matrix_b);
-        print!("{:?}", matrix_c);
         assert_eq!(matrix_c, GlMatrix::new(vec![vec![58.0, 64.0], vec![139.0, 154.0]]))
     }
     #[test]
