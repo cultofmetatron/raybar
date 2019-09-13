@@ -14,6 +14,7 @@ use super::point::{GlPoint};
 //use std::f64::consts::PI;
 //use std::num::{FpCategory};
 use num_traits::{One, ToPrimitive, Zero, Float};
+use std::ops::{Add, Div, Mul, Sub, Neg};
 
 
 #[allow(dead_code)]
@@ -322,6 +323,7 @@ impl<
             }
         }
     }
+
     #[allow(dead_code)]
     pub fn mult(&self, scaler: T) -> GlMatrix<T> {
         let contents = self
@@ -334,17 +336,12 @@ impl<
 
 }
 
-/*
-impl<
-    T: MatrixNumber
-> GlPrimative<T> for GlMatrix<T> {
-    type Output = GlPoint<T>;
-    type Input = GlPoint<T>;
-
-
-
+impl<T: MatrixNumber> Mul<T> for GlMatrix<T> {
+    type Output = GlMatrix<T>;
+    fn mul(self, rhs: T) -> GlMatrix<T> {
+        self.mult(rhs)
+    }
 }
-*/
 
 impl<
         T: MatrixNumber
