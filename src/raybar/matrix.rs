@@ -596,6 +596,25 @@ mod tests {
             vec![1.0]
         ]));
     }
+    fn test_dot_inverse_point_matrix_product() {
+        // create an identity matrix 5, -3, 2
+
+        let translation_matrix = GlMatrix::translation(5.0, -3.0, 2.0);
+        let point_matrix = GlMatrix::new(vec![
+            vec![-3.0],
+            vec![4.0],
+            vec![5.0],
+            vec![One::one()]
+        ]);
+        let new_point_matrix = translation_matrix.invert().unwrap().dot(&point_matrix);
+        //println!("{:?}", new_point);
+        assert_eq!(new_point_matrix, GlMatrix::new(vec![
+            vec![-8.0], 
+            vec![4.0],
+            vec![5.0],
+            vec![1.0]
+        ]));
+    }
     #[test]
     fn test_dot_point_product() {
         let translation_matrix = GlMatrix::translation(5.0, -3.0, 2.0);
