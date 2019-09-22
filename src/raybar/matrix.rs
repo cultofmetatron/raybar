@@ -574,7 +574,13 @@ mod tests {
             vec![One::one()]
         ]);
         let new_point = translation_matrix.dot(&point_matrix);
-        //assert_eq!(matrix_c, GlMatrix::new(vec![vec![58.0, 64.0], vec![139.0, 154.0]]))
+        //println!("{:?}", new_point);
+        assert_eq!(new_point, GlMatrix::new(vec![
+            vec![2.0], 
+            vec![1.0],
+            vec![7.0],
+            vec![1.0]
+        ]));
     }
 
 }
