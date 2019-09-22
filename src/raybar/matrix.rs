@@ -129,11 +129,11 @@ impl<
     }
     #[allow(dead_code)]
     pub fn get_row_size(&self) -> usize {
-        self.content.len()
+        self.content[0].len()
     }
     #[allow(dead_code)]
     pub fn get_col_size(&self) -> usize {
-        self.content[0].len()
+        self.content.len()
     }
     #[allow(dead_code)]
     pub fn get_dimensions(&self) -> (usize, usize) {
@@ -354,7 +354,9 @@ impl<
         let mut contents: Vec<Vec<T>> = vec![];
         //for each row, compute all the values
         let row_size = self.get_row_size();
+        let a_col_size = self.get_col_size();
         let col_size = b.get_col_size();
+        let b_row_size = b.get_row_size();
         // row size must equal col size or we should panic as it is an invalid operation
         if row_size != col_size {
             panic!("invalid matrix operation: invalid dimensions for dot product");
@@ -362,14 +364,15 @@ impl<
             let mut i = 0;
             loop {
                 //iterate through each row and grab the jth col
-                if i == row_size {
+                if i == a_col_size
+                 {
                     break;
                 } else {
                     let row: Vec<T> = self.get_row(i);
                     let mut new_row: Vec<T> = vec![];
                     let mut j = 0;
                     loop {
-                        if j == col_size {
+                        if j == b_row_size {  // we should be iterating till we get the last col of the row
                             break;
                         } else {
                             let column = b.get_column(j);
@@ -407,9 +410,15 @@ mod tests {
     }
     #[test]
     fn test_dot_product() {
-        let matrix_a = GlMatrix::new(vec![vec![1.0, 2.0, 3.0], vec![4.0, 5.0, 6.0]]);
+        let matrix_a = GlMatrix::new(vec![
+            vec![1.0, 2.0, 3.0],
+            vec![4.0, 5.0, 6.0]]
+        );
 
-        let matrix_b = GlMatrix::new(vec![vec![7.0, 8.0], vec![9.0, 10.0], vec![11.0, 12.0]]);
+        let matrix_b = GlMatrix::new(vec![
+            vec![7.0, 8.0], 
+            vec![9.0, 10.0], 
+            vec![11.0, 12.0]]);
 
         let matrix_c = matrix_a.dot(&matrix_b);
         assert_eq!(matrix_c, GlMatrix::new(vec![vec![58.0, 64.0], vec![139.0, 154.0]]))
@@ -552,6 +561,20 @@ mod tests {
 
 
         assert_eq!(matrix_sum, matrix_sumation);
+    }
+    #[test]
+    fn test_dot_point_product() {
+        // create an identity matrix 5, -3, 2
+
+        let translation_matrix = GlMatrix::translation(5.0, -3.0, 2.0);
+        let point_matrix = GlMatrix::new(vec![
+            vec![-3.0],
+            vec![4.0],
+            vec![5.0],
+            vec![One::one()]
+        ]);
+        let new_point = translation_matrix.dot(&point_matrix);
+        //assert_eq!(matrix_c, GlMatrix::new(vec![vec![58.0, 64.0], vec![139.0, 154.0]]))
     }
 
 }

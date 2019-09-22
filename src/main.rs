@@ -1,5 +1,5 @@
 #![feature(trait_alias)]
-
+extern crate num_traits;
 //use crate::glprimatives::GlPrimative;
 //use raybar::*
 mod raybar;
