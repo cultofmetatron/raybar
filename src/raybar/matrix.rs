@@ -345,12 +345,12 @@ impl<T: MatrixNumber> Mul<T> for GlMatrix<T> {
 
 impl<
         T: MatrixNumber
-    > GlPrimative<T> for GlMatrix<T> {
+    > GlPrimative<T, GlMatrix<T>> for GlMatrix<T> {
     type Output = GlMatrix<T>;
-    type Input = GlMatrix<T>;
+    //type Input = GlMatrix<T>;
 
     #[allow(dead_code)]
-    fn dot(&self, b: &Self::Input) -> GlMatrix<T> {
+    fn dot(&self, b: &GlMatrix<T>) -> Self::Output {
         let mut contents: Vec<Vec<T>> = vec![];
         //for each row, compute all the values
         let row_size = self.get_row_size();
@@ -390,8 +390,22 @@ impl<
         }
     }
 
+
 }
 
+
+impl<
+        T: MatrixNumber
+    > GlPrimative<T, GlPoint<T>> for GlMatrix<T> {
+    type Output = GlPoint<T>;
+
+    fn dot(&self, rhs: &GlPoint<T>) -> Self::Output {
+        //rhs.clone()
+        let matrix = self.dot(rhs.get_matrix());
+        GlPoint::from_matrix(matrix)
+    }
+
+}
 
 #[cfg(test)]
 mod tests {
@@ -563,7 +577,7 @@ mod tests {
         assert_eq!(matrix_sum, matrix_sumation);
     }
     #[test]
-    fn test_dot_point_product() {
+    fn test_dot_point_matrix_product() {
         // create an identity matrix 5, -3, 2
 
         let translation_matrix = GlMatrix::translation(5.0, -3.0, 2.0);
@@ -573,14 +587,21 @@ mod tests {
             vec![5.0],
             vec![One::one()]
         ]);
-        let new_point = translation_matrix.dot(&point_matrix);
+        let new_point_matrix = translation_matrix.dot(&point_matrix);
         //println!("{:?}", new_point);
-        assert_eq!(new_point, GlMatrix::new(vec![
+        assert_eq!(new_point_matrix, GlMatrix::new(vec![
             vec![2.0], 
             vec![1.0],
             vec![7.0],
             vec![1.0]
         ]));
+    }
+    #[test]
+    fn test_dot_point_product() {
+        let translation_matrix = GlMatrix::translation(5.0, -3.0, 2.0);
+        let point = GlPoint::new(-3.0, 4.0, 5.0);
+        let new_point = translation_matrix.dot(&point);
+        println!("glPoint: {:?}", new_point);
     }
 
 }

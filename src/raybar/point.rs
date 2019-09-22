@@ -28,6 +28,19 @@ impl<T: MatrixNumber> GlPoint<T> {
     }
   }
   #[allow(dead_code)]
+  pub fn from_matrix(content: GlMatrix<T>) -> GlPoint<T> {
+    if content.get_col_size() == 4 && content.get_row_size() == 1 && *content.get(3, 0) == One::one() {
+      GlPoint{
+        matrix: content
+      }      
+    } else {
+      panic!("invalid input matrix for point!");
+    }
+  }
+  pub fn get_matrix(&self) -> &GlMatrix<T> {
+    &self.matrix
+  } 
+  #[allow(dead_code)]
   fn get_x(&self) -> &T {
     self.matrix.get(0, 0)
   }

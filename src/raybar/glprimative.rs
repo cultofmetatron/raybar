@@ -36,13 +36,12 @@ pub trait MatrixNumber = PartialEq
             + Debug;
 
 #[allow(dead_code)]
-pub trait GlPrimative<T: MatrixNumber> {
+pub trait GlPrimative<T: MatrixNumber, G> {
     type Output;
-    type Input;
-    fn dot(&self, rhs: &Self::Input) -> Self::Output;
+    fn dot(&self, rhs: &G) -> Self::Output;
 }
 
-pub trait Cross<T: MatrixNumber> {
+pub trait Cross<T: MatrixNumber, G> {
     type Output;
     type Input;
     fn cross(&self, rhs: &Self::Input) -> Self::Output;
