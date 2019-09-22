@@ -11,6 +11,7 @@
 extern crate num_traits;
 use super::glprimative::{GlPrimative, MatrixNumber};
 use super::point::{GlPoint};
+use super::vector::{GlVector};
 //use std::f64::consts::PI;
 //use std::num::{FpCategory};
 use num_traits::{One, ToPrimitive, Zero, Float};
@@ -405,6 +406,17 @@ impl<
         GlPoint::from_matrix(matrix)
     }
 
+}
+
+impl<
+        T: MatrixNumber
+    > GlPrimative<T, GlVector<T>> for GlMatrix<T> {
+    type Output = GlVector<T>;
+
+    fn dot(&self, rhs: &GlVector<T>) -> Self::Output {
+        //rhs.clone()
+        rhs.clone()
+    }
 }
 
 #[cfg(test)]
