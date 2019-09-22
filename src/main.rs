@@ -8,7 +8,7 @@ mod raybar;
 
 fn main() {
     println!("Hello, world!");
-    let foo = 5;
+    let foo = 7;
     let bar = foo - 2;
     println!("hello {:?}", bar);
 }
