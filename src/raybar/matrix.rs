@@ -608,6 +608,7 @@ mod tests {
             vec![1.0]
         ]));
     }
+    #[test]
     fn test_dot_inverse_point_matrix_product() {
         // create an identity matrix 5, -3, 2
 
@@ -622,8 +623,8 @@ mod tests {
         //println!("{:?}", new_point);
         assert_eq!(new_point_matrix, GlMatrix::new(vec![
             vec![-8.0], 
-            vec![4.0],
-            vec![5.0],
+            vec![7.0],
+            vec![3.0],
             vec![1.0]
         ]));
     }
