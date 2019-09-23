@@ -415,7 +415,8 @@ impl<
 
     fn dot(&self, rhs: &GlVector<T>) -> Self::Output {
         //rhs.clone()
-        rhs.clone()
+        let matrix = self.dot(rhs.get_matrix());
+        GlVector::from_matrix(matrix)
     }
 }
 

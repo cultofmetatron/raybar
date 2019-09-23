@@ -28,6 +28,19 @@ impl<T: MatrixNumber> GlVector<T> {
     }
   }
   #[allow(dead_code)]
+  pub fn from_matrix(content: GlMatrix<T>) -> GlVector<T> {
+    if content.get_col_size() == 4 && content.get_row_size() == 1 && *content.get(3, 0) == Zero::zero() {
+      GlVector{
+        matrix: content
+      }      
+    } else {
+      panic!("invalid input matrix for vector!");
+    }
+  }
+  pub fn get_matrix(&self) -> &GlMatrix<T> {
+    &self.get_matrix()
+  }
+  #[allow(dead_code)]
   pub fn negate(&self) -> GlVector<T> {
       let zero_vector = GlVector::new(Zero::zero(), Zero::zero(), Zero::zero());
       zero_vector - self.clone()
