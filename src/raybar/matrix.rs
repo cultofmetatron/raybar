@@ -99,6 +99,14 @@ impl<
             vec![Zero::zero(), Zero::zero(), Zero::zero(), One::one()]
         ])
     }
+    pub fn shear(x_y: T, x_z: T, y_x: T, y_z: T, z_x: T, z_y: T) -> GlMatrix<T> {
+        GlMatrix::new(vec![
+            vec![One::one(), x_y, x_z, Zero::zero()],
+            vec![y_x, One::one(), y_z, Zero::zero()],
+            vec![z_x, z_y, One::one(), Zero::zero()],
+            vec![Zero::zero(), Zero::zero(), Zero::zero(), One::one()]
+        ])
+    }
     #[allow(dead_code)]
     pub fn map<F, P: MatrixNumber>(&self, func: F) -> GlMatrix<P>
     where F: Fn((usize, usize), &T) -> P {
