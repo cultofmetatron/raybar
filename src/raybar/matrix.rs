@@ -753,5 +753,45 @@ mod tests {
         assert_eq!(half_quarter.dot(&point), GlPoint::new(-0.7071067811865475, 0.7071067811865476, 0.0));
         assert_eq!(full_quarter.dot(&point), GlPoint::new(-1.0, 0.00000000000000006123233995736766, 0.0));
     }
+    // shearing tests
+    #[test]
+    fn test_shearing_moved_x_in_proportion_to_y() {
+        let p = GlPoint::new(2.0, 3.0, 4.0);
+        let shear = GlMatrix::shear(1.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+        assert_eq!(shear * p, GlPoint::new(5.0, 3.0, 4.0));
+    }
+    #[test]
+    fn test_shearing_moved_x_in_proportion_to_z() {
+        let p = GlPoint::new(2.0, 3.0, 4.0);
+        let shear = GlMatrix::shear(0.0, 1.0, 0.0, 0.0, 0.0, 0.0);
+        assert_eq!(shear * p, GlPoint::new(6.0, 3.0, 4.0));
+    }
+        #[test]
+    fn test_shearing_moved_y_in_proportion_to_x() {
+        let p = GlPoint::new(2.0, 3.0, 4.0);
+        let shear = GlMatrix::shear(0.0, 0.0, 1.0, 0.0, 0.0, 0.0);
+        assert_eq!(shear * p, GlPoint::new(2.0, 5.0, 4.0));
+    }
+
+        #[test]
+    fn test_shearing_moved_y_in_proportion_to_z() {
+        let p = GlPoint::new(2.0, 3.0, 4.0);
+        let shear = GlMatrix::shear(0.0, 0.0, 0.0, 1.0, 0.0, 0.0);
+        assert_eq!(shear * p, GlPoint::new(2.0, 7.0, 4.0));
+    }
+    #[test]
+    fn test_shearing_moved_z_in_proportion_to_x() {
+        let p = GlPoint::new(2.0, 3.0, 4.0);
+        let shear = GlMatrix::shear(0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+        assert_eq!(shear * p, GlPoint::new(2.0, 3.0, 6.0));
+    }
+
+        #[test]
+    fn test_shearing_moved_z_in_proportion_to_y() {
+        let p = GlPoint::new(2.0, 3.0, 4.0);
+        let shear = GlMatrix::shear(0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+        assert_eq!(shear * p, GlPoint::new(2.0, 3.0, 7.0));
+    }
+
 
 }
