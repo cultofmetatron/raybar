@@ -78,9 +78,17 @@ impl<
     pub fn rotate_x(r: T) -> GlMatrix<T> {
         GlMatrix::new(vec![
             vec![One::one(), Zero::zero(), Zero::zero(), Zero::zero()],
-            vec![Zero::zero(), r.cos(), -r.sin(), Zero::zero()],
+            vec![Zero::zero(), r.cos(), -(r.sin()), Zero::zero()],
             vec![Zero::zero(), r.sin(),     r.cos(), Zero::zero()],
             vec![Zero::zero(), Zero::zero(), Zero::zero(), One::one()],
+        ])
+    }
+    pub fn rotate_y(r: T) -> GlMatrix<T> {
+        GlMatrix::new(vec![
+            vec![r.cos(), Zero::zero(), r.sin(), Zero::zero()],
+            vec![Zero::zero(), One::one(), Zero::zero(), Zero::zero()],
+            vec![-(r.sin()), Zero::zero(), r.cos(), Zero::zero()],
+            vec![Zero::zero(), Zero::zero(), Zero::zero(), One::one()]
         ])
     }
     #[allow(dead_code)]
