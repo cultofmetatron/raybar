@@ -1,3 +1,5 @@
+#![feature(trait_alias)]
+extern crate num_traits;
 //use crate::glprimatives::GlPrimative;
 //use raybar::*
 mod raybar;
@@ -6,4 +8,7 @@ mod raybar;
 
 fn main() {
     println!("Hello, world!");
+    let foo = 7;
+    let bar = foo - 2;
+    println!("hello {:?}", bar);
 }
