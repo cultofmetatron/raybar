@@ -38,7 +38,7 @@ impl<T: MatrixNumber> GlVector<T> {
     }
   }
   pub fn get_matrix(&self) -> &GlMatrix<T> {
-    &self.get_matrix()
+    &self.matrix
   }
   #[allow(dead_code)]
   pub fn negate(&self) -> GlVector<T> {

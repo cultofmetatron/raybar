@@ -667,4 +667,17 @@ mod tests {
         println!("glPoint: {:?}", new_point);
     }
 
+    #[test]
+    fn test_scaling_point() {
+        let point = GlPoint::new(-4.0, 6.0, 8.0);
+        let scaling_transfrom =GlMatrix::scaling(2.0, 3.0, 4.0);
+        assert_eq!(scaling_transfrom * point, GlPoint::new(-8.0, 18.0, 32.0));
+    }
+    #[test]
+    fn test_scaling_vector() {
+        let vector = GlVector::new(-4.0, 6.0, 8.0);
+        let scaling_transfrom =GlMatrix::scaling(2.0, 3.0, 4.0);
+        assert_eq!(scaling_transfrom * vector, GlVector::new(-8.0, 18.0, 32.0));
+    }
+
 }
