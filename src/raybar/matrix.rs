@@ -91,6 +91,14 @@ impl<
             vec![Zero::zero(), Zero::zero(), Zero::zero(), One::one()]
         ])
     }
+    pub fn rotate_z(r: T) -> GlMatrix<T> {
+        GlMatrix::new(vec![
+            vec![r.cos(), -(r.sin()), Zero::zero(), Zero::zero()],
+            vec![r.sin(),   r.cos(),  Zero::zero(), Zero::zero()],
+            vec![Zero::zero(), Zero::zero(), One::one(), Zero::zero()],
+            vec![Zero::zero(), Zero::zero(), Zero::zero(), One::one()]
+        ])
+    }
     #[allow(dead_code)]
     pub fn map<F, P: MatrixNumber>(&self, func: F) -> GlMatrix<P>
     where F: Fn((usize, usize), &T) -> P {
