@@ -719,4 +719,13 @@ mod tests {
         assert_eq!(calculated, expected);
         assert_eq!(full_quarter * point, GlPoint::new(0.0, 0.00000000000000006123233995736766, 1.0));
     }
+    #[test]
+    fn test_rotate_y() {
+        let point = GlPoint::new(0.0, 0.0, 1.0);
+        let half_quarter = GlMatrix::rotate_y(std::f64::consts::PI/4.0);
+        let full_quarter = GlMatrix::rotate_y(std::f64::consts::PI/2.0);
+
+        assert_eq!(half_quarter.dot(&point), GlPoint::new(0.7071067811865475, 0.0, 0.7071067811865476));
+        assert_eq!(full_quarter.dot(&point), GlPoint::new(1.0, 0.0, 0.00000000000000006123233995736766));
+    }
 }
