@@ -75,6 +75,15 @@ impl<
         ])
     }
     #[allow(dead_code)]
+    pub fn rotate_x(r: T) -> GlMatrix<T> {
+        GlMatrix::new(vec![
+            vec![One::one(), Zero::zero(), Zero::zero(), Zero::zero()],
+            vec![Zero::zero(), r.cos(), -r.sin(), Zero::zero()],
+            vec![Zero::zero(), r.sin(),     r.cos(), Zero::zero()],
+            vec![Zero::zero(), Zero::zero(), Zero::zero(), One::one()],
+        ])
+    }
+    #[allow(dead_code)]
     pub fn map<F, P: MatrixNumber>(&self, func: F) -> GlMatrix<P>
     where F: Fn((usize, usize), &T) -> P {
         let contents = self.content
@@ -690,5 +699,16 @@ mod tests {
         let point = GlPoint::new(2.0, 3.0, 4.0);
         let scaling_transform = GlMatrix::scaling(-1.0, 1.0, 1.0);
         assert_eq!(scaling_transform * point, GlPoint::new(-2.0, 3.0, 4.0));
+    }
+    #[test]
+    fn test_rotate_x() {
+        let point = GlPoint::new(0.0, 1.0, 0.0);
+        let half_quarter = GlMatrix::rotate_x(std::f64::consts::PI/4.0);
+        let full_quarter = GlMatrix::rotate_x(std::f64::consts::PI/2.0);
+
+        let expected = GlPoint::new(0.0, 0.7071067811865476, 0.7071067811865475);
+        let calculated = half_quarter.dot(&point);
+        assert_eq!(calculated, expected);
+        assert_eq!(full_quarter * point, GlPoint::new(0.0, 0.00000000000000006123233995736766, 1.0));
     }
 }
