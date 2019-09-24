@@ -66,6 +66,15 @@ impl<
         ])
     }
     #[allow(dead_code)]
+    pub fn scaling(x: T, y: T, z: T) -> GlMatrix<T> {
+        GlMatrix::new(vec![
+            vec![x, Zero::zero(), Zero::zero(), Zero::zero()],
+            vec![Zero::zero(), y, Zero::zero(), Zero::zero()],
+            vec![Zero::zero(), Zero::zero(), z, Zero::zero()],
+            vec![Zero::zero(), Zero::zero(), Zero::zero(), One::one()]
+        ])
+    }
+    #[allow(dead_code)]
     pub fn map<F, P: MatrixNumber>(&self, func: F) -> GlMatrix<P>
     where F: Fn((usize, usize), &T) -> P {
         let contents = self.content
@@ -337,13 +346,6 @@ impl<
 
 }
 
-impl<T: MatrixNumber> Mul<T> for GlMatrix<T> {
-    type Output = GlMatrix<T>;
-    fn mul(self, rhs: T) -> GlMatrix<T> {
-        self.mult(rhs)
-    }
-}
-
 impl<
         T: MatrixNumber
     > GlPrimative<T, GlMatrix<T>> for GlMatrix<T> {
@@ -417,6 +419,34 @@ impl<
         //rhs.clone()
         let matrix = self.dot(rhs.get_matrix());
         GlVector::from_matrix(matrix)
+    }
+}
+
+impl<T: MatrixNumber> Mul<T> for GlMatrix<T> {
+    type Output = GlMatrix<T>;
+    fn mul(self, rhs: T) -> GlMatrix<T> {
+        self.mult(rhs)
+    }
+}
+
+impl<T: MatrixNumber> Mul<GlMatrix<T>> for GlMatrix<T> {
+    type Output = GlMatrix<T>;
+    fn mul(self, rhs: GlMatrix<T>) -> GlMatrix<T> {
+        self.dot(&rhs)
+    }
+}
+
+impl<T: MatrixNumber> Mul<GlPoint<T>> for GlMatrix<T> {
+    type Output = GlPoint<T>;
+    fn mul(self, rhs: GlPoint<T>) -> GlPoint<T> {
+        self.dot(&rhs)
+    }
+}
+
+impl<T: MatrixNumber> Mul<GlVector<T>> for GlMatrix<T> {
+    type Output = GlVector<T>;
+    fn mul(self, rhs: GlVector<T>) -> GlVector<T> {
+        self.dot(&rhs)
     }
 }
 
