@@ -15,14 +15,14 @@ ImageBuffer<T::Pixel, Vec<<<T as image::GenericImageView>::Pixel as Trait>::Subp
 pub fn mount_image<T: GenericImageView>(
     (x, y): (u32, u32),
     input: T,
-    clearValue: T::Pixel,
-) -> ImageBuffer<T::Pixel, Vec<<<T as image::GenericImageView>::Pixel as image::Pixel>::Subpixel>>
+    clear_value: T::Pixel,
+) -> ImageBuffer<T::Pixel, Vec<<T::Pixel as Pixel>::Subpixel>>
 where
     T::Pixel: 'static,
 {
     let mut imageBuffer = ImageBuffer::new(x, y);
     for (x, y, pixel) in imageBuffer.enumerate_pixels_mut() {
-        *pixel = clearValue.clone();
+        *pixel = clear_value.clone();
     }
 
     for (x, y, pixel) in input.pixels() {
