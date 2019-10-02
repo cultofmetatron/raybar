@@ -5,10 +5,23 @@ extern crate num_traits;
 mod raybar;
 // use raybar::glprimatives::*;
 //use raybar::canvas
+extern crate clap;
+use clap::{Arg, App, SubCommand};
 
 fn main() {
-    println!("Hello, world!");
-    let foo = 7;
-    let bar = foo - 2;
-    println!("hello {:?}", bar);
+    let matches = App::new("raybar")
+        .version("1.0")
+        .author("cultofmetatron")
+        .about("a toolkit for nonrealtime graphics")
+        .arg(Arg::with_name("isomorph")
+            .short("iso")
+            .long("isomorph")
+            .value_name("FILE")
+            .help("transforms a top down iso to a isomorphic layout")
+            .takes_value(true))
+        .get_matches();
+    
+    let isomorph = matches.value_of("isomorph").unwrap();
+    println!("VAluef or isomorph {}", isomorph);
+            
 }
