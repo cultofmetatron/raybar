@@ -20,15 +20,11 @@ pub fn mount_image<T: GenericImageView>(
 where
     T::Pixel: 'static,
 {
-    let mut imageBuffer = ImageBuffer::new(x, y);
-    for (x, y, pixel) in imageBuffer.enumerate_pixels_mut() {
-        *pixel = clear_value.clone();
-    }
-
+    let mut image_buffer = ImageBuffer::from_pixel(x, y, clear_value);
     for (x, y, pixel) in input.pixels() {
         //let img_pixel = input.get_pixel(x, y);
-        imageBuffer.put_pixel(x, y, pixel.clone());
+        image_buffer.put_pixel(x, y, pixel.clone());
     }
 
-    imageBuffer
+    image_buffer
 }
