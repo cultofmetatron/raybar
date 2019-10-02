@@ -6,7 +6,11 @@ mod raybar;
 // use raybar::glprimatives::*;
 //use raybar::canvas
 extern crate clap;
+extern crate image;
+
 use clap::{Arg, App, SubCommand};
+
+use image::GenericImageView;
 
 fn main() {
     let matches = App::new("raybar")
@@ -23,5 +27,12 @@ fn main() {
     
     let isomorph = matches.value_of("isomorph").unwrap();
     println!("VAluef or isomorph {}", isomorph);
-            
+
+    // pull the file from isomorph and load into memory
+    let image = image::open(isomorph).unwrap();
+    //let image = 
+    //image.
+    
+    println!("the color is: {:?}", image.color());
+
 }

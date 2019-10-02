@@ -4,3 +4,5 @@ pub mod vector;
 pub mod point;
 pub mod screen;
 pub mod util;
+
+pub mod examples;
