@@ -8,7 +8,7 @@ mod raybar;
 extern crate clap;
 extern crate image;
 
-use clap::{Arg, App, SubCommand};
+use clap::{App, Arg, SubCommand};
 
 use image::GenericImageView;
 
@@ -17,22 +17,23 @@ fn main() {
         .version("1.0")
         .author("cultofmetatron")
         .about("a toolkit for nonrealtime graphics")
-        .arg(Arg::with_name("isomorph")
-            .short("iso")
-            .long("isomorph")
-            .value_name("FILE")
-            .help("transforms a top down iso to a isomorphic layout")
-            .takes_value(true))
+        .arg(
+            Arg::with_name("isomorph")
+                .short("iso")
+                .long("isomorph")
+                .value_name("FILE")
+                .help("transforms a top down iso to a isomorphic layout")
+                .takes_value(true),
+        )
         .get_matches();
-    
+
     let isomorph = matches.value_of("isomorph").unwrap();
     println!("VAluef or isomorph {}", isomorph);
 
     // pull the file from isomorph and load into memory
     let image = image::open(isomorph).unwrap();
-    //let image = 
+    //let image =
     //image.
-    
-    println!("the color is: {:?}", image.color());
 
+    println!("the color is: {:?}", image.color());
 }

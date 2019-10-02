@@ -1,5 +1,3 @@
-
-
 //use std::cmp::{Ord, PartialEq, PartialOrd};
 //use std::ops::{Add, Div, Mul, Sub};
 //use num_traits::{One, Signed, ToPrimitive, Zero};
@@ -14,26 +12,25 @@ use std::fmt::Debug;
 use std::ops::{Add, Div, Mul, Sub};
 //use std::f64::consts::PI;
 //use std::num::{FpCategory};
-use num_traits::{One, Signed, ToPrimitive, Zero, Float};
+use num_traits::{Float, One, Signed, ToPrimitive, Zero};
 
 // for comparing floating points
 //use super::util::fl_eq;
 
-
 pub trait MatrixNumber = PartialEq
-            + PartialOrd
-            + Mul<Output = Self>
-            + Add<Output = Self>
-            + Sub<Output = Self>
-            + Div<Output = Self>
-            + Clone
-            + Copy
-            + Zero
-            + One
-            + Signed
-            + ToPrimitive
-            + Float
-            + Debug;
+    + PartialOrd
+    + Mul<Output = Self>
+    + Add<Output = Self>
+    + Sub<Output = Self>
+    + Div<Output = Self>
+    + Clone
+    + Copy
+    + Zero
+    + One
+    + Signed
+    + ToPrimitive
+    + Float
+    + Debug;
 
 #[allow(dead_code)]
 pub trait GlPrimative<T: MatrixNumber, G> {
@@ -46,4 +43,3 @@ pub trait Cross<T: MatrixNumber, G> {
     type Input;
     fn cross(&self, rhs: &Self::Input) -> Self::Output;
 }
-
